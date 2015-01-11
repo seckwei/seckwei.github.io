@@ -22,6 +22,10 @@ Begin
 					B[failPos] = size(subA)
 					flag := true
 					break
+				ELSE IF size(B) = 1 THEN
+					B[failPos] = 0
+					flag := true
+					break
 				ELSE
 					continue
 				FI
