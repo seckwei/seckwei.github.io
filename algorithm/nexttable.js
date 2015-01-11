@@ -1,5 +1,5 @@
 var A = ["A","C","A","C","B"];  // Input array
-var B = new Array(A.length);// Next table
+var B = [-2,-2,-2,-2,-2];// Next table
 
 B[0] = -1; // First value always -1
 
@@ -23,5 +23,5 @@ for(var i = 1; i < A.length-1; i++){
 }
 
 for(var i = 0; i < B.length; i++){
-  document.write(i + " - " + B[i] + "\n");
+  document.write(i + " - " + B[i] + "<br>");
 }
