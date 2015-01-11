@@ -23,4 +23,8 @@
     B[i] = (flag)? pos : -1;
   }
   
+  for(var i = 0; i < B.length; i++){
+    document.write(i + " - " + B[i] + "\n");
+  }
+  
 </script>
