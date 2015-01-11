@@ -24,6 +24,11 @@ for(var failPos = 2; failPos < A.length; failPos++){
         flag = true;
         break;
       }
+      else if(subB.length === 1){
+        B[failPos] = 0;
+        flag = true;
+        break;
+      }
       else {
         continue
       }
