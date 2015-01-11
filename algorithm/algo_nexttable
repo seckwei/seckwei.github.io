@@ -33,3 +33,21 @@ Begin
 			B[i] := pos;	
 	OD
 End
+
+-1,0,-1,0,2 
+  x
+ACA
+ A
+  A
+   A
+   
+   x
+ACAC
+ AC
+  A
+   A
+	 
+    x
+ACACB
+ ACA
+  AC
