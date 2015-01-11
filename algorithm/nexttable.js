@@ -30,7 +30,7 @@ function nexttable(input){
           flag = true;
           break;
         }
-        else if(subB.length === 1){
+        else if(subB.length === 1 && subB[0] !== A[failPos]){
           B[failPos] = 0;
           flag = true;
           break;
@@ -40,9 +40,7 @@ function nexttable(input){
         }
       }
       else{
-        addLine("subB.length = " + subB.length);
         if(subB.length === 1 && subB[0] !== A[failPos]){
-          addLine("sublength = 1, subB[0] != A[failPos]");
           B[failPos] = 0;
           flag = true;
           break;
