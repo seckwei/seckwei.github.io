@@ -19,6 +19,7 @@ for(var failPos = 2; failPos < A.length; failPos++){
     if(same){
       addLine("same? = " + same);
       if(A[failPos] !== A[subA.length]){
+        addLine("inner same? = " + A[failPos] === A[subA.length]);
         B[failPos] = subA.length;
         flag = true;
         break;
