@@ -7,6 +7,7 @@ B[1] = (A[1]==A[0])? -1 : 0;
 
 for(var failPos = 2; i < A.length-1; i++){
   var flag = false;
+  
   for(var i = 1; i < failPos-1; i++){
     var subA = A.slice(i, failPos);
     var subB = A.slice(0, subA.length);
@@ -33,13 +34,13 @@ for(var failPos = 2; i < A.length-1; i++){
 displayArray(B);
 
 /** Helper Functions **/
-function compareStrArray(a, b){
-  if(a.length != b.length){
+function compareStrArray(arrA, arrB){
+  if(arrA.length != arrB.length){
     return false;
   }
   else {
-    for(var i = 0; i < a.length-1; i++){
-      if(a[i] !== b[i]){
+    for(var i = 0; i < arrA.length-1; i++){
+      if(arrA[i] !== arrB[i]){
         return false;
       }
     }
@@ -47,8 +48,8 @@ function compareStrArray(a, b){
   }
 }
 
-function displayArray(a){
-  for(var i = 0; i < a.length-1; i++){
-    document.writeln(i + " == " + a[i]);
+function displayArray(arr){
+  for(var i = 0; i < arr.length-1; i++){
+    document.write(i + " == " + arr[i] + "<br>");
   }
 }
