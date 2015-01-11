@@ -33,7 +33,7 @@ for(var failPos = 2; i < A.length-1; i++){
 displayArray(B);
 
 /** Helper Functions **/
-function compareStrArray(a[], b[]){
+function compareStrArray(a, b){
   if(a.length != b.length){
     return false;
   }
@@ -47,7 +47,7 @@ function compareStrArray(a[], b[]){
   }
 }
 
-function displayArray(a[]){
+function displayArray(a){
   for(var i = 0; i < a.length-1; i++){
     document.writeln(i + " == " + a[i]);
   }
