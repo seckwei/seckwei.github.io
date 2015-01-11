@@ -7,7 +7,7 @@ B[0] = -1; // First value always -1
 for(var i = 1; i < A.length-1; i++){
   var flag = false;
   
-  for(var j = 1; j < i-1 AND !flag; j++){
+  for(var j = 1; j < i-1 && !flag; j++){
     flag = true;
     
     for(var k = 0; A.length-1-j-1; k++){
