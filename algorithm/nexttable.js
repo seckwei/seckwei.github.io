@@ -1,8 +1,10 @@
 /** Main Algorithm **/
 function nexttable(input){
+  // Clears the result area
+  document.getElementById("result").innerHTML = " ";
   
   var A = input.split("");  // Input array
-  alert(input + " // " + A);
+  addLine(A);
   
   var B = new Array(A.length);// Next table
   
@@ -11,10 +13,10 @@ function nexttable(input){
   
   for(var failPos = 2; failPos < A.length; failPos++){
     var flag = false;
-    addLine(">" + failPos);
+    //addLine(">" + failPos);
     
     for(var i = 1; i < failPos; i++){
-      addLine("-->" + i);
+      //addLine("-->" + i);
       var subA = A.slice(i, failPos);
       var subB = A.slice(0, subA.length);
       
