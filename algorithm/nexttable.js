@@ -7,10 +7,10 @@ B[1] = (A[1]==A[0])? -1 : 0;
 
 for(var failPos = 2; failPos < A.length; i++){
   var flag = false;
-  document.write(">" + failPos + "<br>");
+  document.getElementById("result").innerHTML = (">" + failPos + "<br>");
   
   for(var i = 1; i < failPos-1; i++){
-    document.write(">>" + i + "<br>");
+    document.getElementById("result").innerHTML = (">>" + i + "<br>");
     var subA = A.slice(i, failPos);
     var subB = A.slice(0, subA.length);
     
@@ -52,6 +52,6 @@ function compareStrArray(arrA, arrB){
 
 function displayArray(arr){
   for(var i = 0; i < arr.length; i++){
-    document.write(i + " == " + arr[i] + "<br>");
+    document.getElementById("result").innerHTML = (i + " == " + arr[i] + "<br>");
   }
 }
