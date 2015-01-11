@@ -1,27 +1,54 @@
+/** Main Algorithm **/
 var A = ["A","C","A","C","B"];  // Input array
 var B = [-2,-2,-2,-2,-2];// Next table
 
 B[0] = -1; // First value always -1
+B[1] = (A[1]==A[0])? -1 : 0;
 
-// Loop through A from position 1 to N
-for(var i = 1; i < A.length-1; i++){
+for(var failPos = 2; i < A.length-1; i++){
   var flag = false;
-  
-  for(var j = 1; j < i-1 && !flag; j++){
-    flag = true;
+  for(var i := 1; i < failPos-1; i++){
+    var subA = A.slice(i, failPos);
+    var subB = A.slice(0, subA.length);
     
-    for(var k = 0; A.length-1-j-1; k++){
-      if(A[k] != A[j]){
-        flag = false;
+    var same = compareStrArray(subA, subB);
+    
+    if(same){
+      if(A[failPos] !== A[subA.length]){
+        B[failPos] = subA.length;
+        flag = true;
         break;
       }
-      pos = k+1;
+      else {
+        continue
+      }
+    }
+    else{
+      continue
     }
   }
   
-  B[i] = (flag)? pos : -1;
+  if(!flag) B[failPos] = -1;
+}
+displayArray(B);
+
+/** Helper Functions **/
+function compareStrArray(a[], b[]){
+  if(a.length != b.length){
+    return false;
+  }
+  else {
+    for(var i = 0; i < a.length-1; i++){
+      if(a[i] !== b[i]){
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
-for(var i = 0; i < B.length; i++){
-  document.write(i + " - " + B[i] + "<br>");
+function displayArray(a[]){
+  for(var i = 0; i < a.length-1; i++){
+    document.writeln(i + " == " + a[i]);
+  }
 }
