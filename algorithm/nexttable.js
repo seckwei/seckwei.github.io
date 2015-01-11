@@ -9,7 +9,7 @@ for(var failPos = 2; failPos < A.length; failPos++){
   var flag = false;
   addLine(">" + failPos);
   
-  for(var i = 1; i < failPos-1; i++){
+  for(var i = 1; i < failPos; i++){
     addLine("-->" + i);
     var subA = A.slice(i, failPos);
     var subB = A.slice(0, subA.length);
