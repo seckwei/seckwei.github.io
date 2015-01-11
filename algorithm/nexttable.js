@@ -56,7 +56,7 @@ function displayArray(arr){
   }
 }
 
-functon addLine(string){
+function addLine(string){
   var div = document.createElement("DIV");
   var t = document.createTextNode(string);
   div.appendChild(t);
