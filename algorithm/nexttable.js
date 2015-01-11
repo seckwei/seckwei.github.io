@@ -5,7 +5,7 @@ var B = [-2,-2,-2,-2,-2];// Next table
 B[0] = -1; // First value always -1
 B[1] = (A[1]==A[0])? -1 : 0;
 
-for(var failPos = 2; i < A.length-1; i++){
+for(var failPos = 2; i < A.length; i++){
   var flag = false;
   
   for(var i = 1; i < failPos-1; i++){
@@ -39,7 +39,7 @@ function compareStrArray(arrA, arrB){
     return false;
   }
   else {
-    for(var i = 0; i < arrA.length-1; i++){
+    for(var i = 0; i < arrA.length; i++){
       if(arrA[i] !== arrB[i]){
         return false;
       }
@@ -49,7 +49,7 @@ function compareStrArray(arrA, arrB){
 }
 
 function displayArray(arr){
-  for(var i = 0; i < arr.length-1; i++){
+  for(var i = 0; i < arr.length; i++){
     document.write(i + " == " + arr[i] + "<br>");
   }
 }
