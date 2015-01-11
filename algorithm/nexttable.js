@@ -23,9 +23,9 @@ function nexttable(input){
       var same = compareStrArray(subA, subB);
       
       if(same){
-        addLine("same? = " + same);
+        //addLine("same? = " + same);
         if(A[failPos] !== A[subA.length]){
-          addLine("inner same? = " + (A[failPos] === A[subA.length]));
+          //addLine("inner same? = " + (A[failPos] === A[subA.length]));
           B[failPos] = subA.length;
           flag = true;
           break;
