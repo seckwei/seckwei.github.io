@@ -22,7 +22,7 @@ Begin
 					B[failPos] = size(subA)
 					flag := true
 					break
-				ELSE IF size(B) = 1 THEN
+				ELSE IF size(B) = 1 AND subB[0] != A[failPos] THEN
 					B[failPos] = 0
 					flag := true
 					break
