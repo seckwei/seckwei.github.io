@@ -25,17 +25,23 @@ for(var failPos = 2; failPos < A.length; failPos++){
         break;
       }
       else if(subB.length === 1){
-        addLine("sub length = 1");
         B[failPos] = 0;
         flag = true;
         break;
       }
       else {
-        continue
+        continue;
       }
     }
     else{
-      continue
+      if(subB.length === 1 && subB[0] !== A[failPos]){
+        B[failPos] = 0;
+        flag = true;
+        break;
+      }
+      else{
+        continue;
+      }
     }
   }
   
