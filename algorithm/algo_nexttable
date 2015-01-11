@@ -1,0 +1,35 @@
+Algorithm		nextTable
+Input				Array of Char : A
+Variables		Integer : i, j, k, pos; Boolean: flag
+Returns			Array of Integer: B
+
+Begin	
+	B[0] := -1
+	IF A[1] = A[0] THEN
+		B[1] := -1
+	ELSE
+		B[1] := 0
+	FI
+	
+	FOR i := 2 TO size(A)-1 DO
+		
+		// Check before the POS failed
+		flag := false
+		
+		FOR j := 1 to i AND flag = false DO
+			flag := true
+			FOR k := 0 to size(A)-1-j-1 DO
+				IF A[k] != A[k+j] THEN
+					flag := false
+					break
+				FI
+				pos := k+1;
+			OD
+		OD
+		
+		IF flag := false THEN
+			B[i] := -1
+		ELSE
+			B[i] := pos;	
+	OD
+End
