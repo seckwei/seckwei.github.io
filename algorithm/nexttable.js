@@ -40,6 +40,7 @@ function nexttable(input){
         }
       }
       else{
+        addLine("subB.length = " + subB.length);
         if(subB.length === 1 && subB[0] !== A[failPos]){
           addLine("sublength = 1, subB[0] != A[failPos]");
           B[failPos] = 0;
