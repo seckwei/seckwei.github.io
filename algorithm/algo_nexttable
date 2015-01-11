@@ -1,7 +1,7 @@
-Algorithm		nextTable
-Input				Array of Char : A
-Variables		Integer : i, j, k, pos; Boolean: flag
-Returns			Array of Integer: B
+Algorithm	nextTable
+Input		Array of Char : A
+Variables	Integer : i, j, k, pos; Boolean: flag
+Returns		Array of Integer: B
 
 Begin	
 	B[0] := -1
