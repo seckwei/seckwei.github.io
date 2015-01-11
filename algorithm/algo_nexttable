@@ -11,26 +11,23 @@ Begin
 		B[1] := 0
 	FI
 	
-	FOR i := 2 TO size(A)-1 DO
-		
-		// Check before the POS failed
-		flag := false
-		
-		FOR j := 1 to i AND flag = false DO
-			flag := true
-			FOR k := 0 to size(A)-1-j-1 DO
-				IF A[k] != A[k+j] THEN
-					flag := false
+	FOR failPos := 2 TO size(A)-1 DO
+		FOR i := 1 to failPos-1 DO
+			
+			Compare subarray A[i to failPos-1], subA
+			With subArray A[0 to size(subA)-1], subB
+			
+			IF subA = subB THEN
+				IF A[failPos] != A[size(subA)] THEN
+					B[i] = size(subA)
 					break
+				ELSE
+					continue
 				FI
-				pos := k+1;
-			OD
+			ELSE
+				continue
+			FI
 		OD
-		
-		IF flag := false THEN
-			B[i] := -1
-		ELSE
-			B[i] := pos;	
 	OD
 End
 
@@ -47,7 +44,8 @@ ACAC
   A
    A
 	 
-    x
-ACACB
- ACA
-  AC
+        x
+0 1 2 3 4
+A C A C B
+  A C A C
+    A C A
