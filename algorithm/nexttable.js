@@ -7,10 +7,10 @@ B[1] = (A[1]==A[0])? -1 : 0;
 
 for(var failPos = 2; failPos < A.length; failPos++){
   var flag = false;
-  //addLine(">" + failPos);
+  addLine(">" + failPos);
   
   for(var i = 1; i < failPos; i++){
-    //addLine("-->" + i);
+    addLine("-->" + i);
     var subA = A.slice(i, failPos);
     var subB = A.slice(0, subA.length);
     
