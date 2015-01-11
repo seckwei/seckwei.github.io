@@ -12,14 +12,15 @@ Begin
 	FI
 	
 	FOR failPos := 2 TO size(A)-1 DO
+		flag := false
 		FOR i := 1 to failPos-1 DO
-			
 			Compare subarray A[i to failPos-1], subA
 			With subArray A[0 to size(subA)-1], subB
 			
 			IF subA = subB THEN
 				IF A[failPos] != A[size(subA)] THEN
-					B[i] = size(subA)
+					B[failPos] = size(subA)
+					flag := true
 					break
 				ELSE
 					continue
@@ -28,6 +29,9 @@ Begin
 				continue
 			FI
 		OD
+		IF flag = false THEN
+			B[failPos] := -1
+		FI
 	OD
 End
 
