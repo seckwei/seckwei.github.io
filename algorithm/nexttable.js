@@ -2,7 +2,7 @@
 function nexttable(input){
   
   var A = input.split("");  // Input array
-  document.getElementById("result").innerHTML = A;
+  alert(input + " // " + A);
   
   var B = new Array(A.length);// Next table
   
