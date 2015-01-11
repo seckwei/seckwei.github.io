@@ -1,9 +1,10 @@
 Algorithm	nextTable
-Input		Array of Char : A
-Variables	Integer : i, j, k, pos; Boolean: flag
-Returns		Array of Integer: B
+Input		Array of Char : A, B
+Variables	Integer : i, failPos; 
+			Boolean: flag, same; 
+			Array of Integer: subA, subB 
 
-Begin	
+Begin
 	B[0] := -1
 	IF A[1] = A[0] THEN
 		B[1] := -1
@@ -13,9 +14,11 @@ Begin
 	
 	FOR failPos := 2 TO size(A)-1 DO
 		flag := false
+		
 		FOR i := 1 to failPos-1 DO
+		
 			Compare subarray A[i to failPos-1], subA
-			With subArray A[0 to size(subA)-1], subB
+			with subArray A[0 to size(subA)-1], subB
 			
 			IF subA = subB THEN
 				IF A[failPos] != A[size(subA)] THEN
@@ -44,22 +47,3 @@ Begin
 		FI
 	OD
 End
-
--1,0,-1,0,2 
-  x
-ACA
- A
-  A
-   A
-   
-   x
-ACAC
- AC
-  A
-   A
-	 
-        x
-0 1 2 3 4
-A C A C B
-  A C A C
-    A C A
