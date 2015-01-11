@@ -30,7 +30,13 @@ Begin
 					continue
 				FI
 			ELSE
-				continue
+				IF size(B) = 1 AND subB[0] != A[failPos] THEN
+					B[failPos] = 0
+					flag := true
+					break	
+				ELSE
+					continue
+				FI
 			FI
 		OD
 		IF flag = false THEN
