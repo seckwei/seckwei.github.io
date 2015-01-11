@@ -7,8 +7,10 @@ B[1] = (A[1]==A[0])? -1 : 0;
 
 for(var failPos = 2; i < A.length; i++){
   var flag = false;
+  document.write(">" + failPos + "<br>");
   
   for(var i = 1; i < failPos-1; i++){
+    document.write(">>" + i + "<br>");
     var subA = A.slice(i, failPos);
     var subB = A.slice(0, subA.length);
     
