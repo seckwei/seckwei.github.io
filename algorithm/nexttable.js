@@ -3,29 +3,37 @@ function nexttable(input){
   // Clears the result area
   document.getElementById("result").innerHTML = " ";
   
-  var A = input.split("");  // Input array
+  // Split Input into an Array 
+  var A = input.split("");
   addLine(A);
   
-  var B = new Array(A.length);// Next table
+  // Next table
+  var B = new Array(A.length);
   
-  B[0] = -1; // First value always -1
-  B[1] = (A[1]==A[0])? -1 : 0;
+  B[0] = -1;                    // First value always -1
+  B[1] = (A[1]==A[0])? -1 : 0;  // Second value based on equality of first and second element
   
-  for(var failPos = 2; failPos < A.length; failPos++){
-    var flag = false;
-    //addLine(">" + failPos);
+  for(var failPos = 2; failPos < A.length; failPos++){ // start from 2 cause 0 and 1 are done
+    var flag = false; // to identify if value for current failPos is assigned or not
     
     for(var i = 1; i < failPos; i++){
-      //addLine("-->" + i);
+      /* comparing sub arrays e.g.
+       *            x <--- failed at position 4
+       * P = A C A C B
+       *       C A C <--- subA
+       *       A C A <--- subB
+       *  Skipped using sub array from pos 0 because it's obvious to fail'
+       */
       var subA = A.slice(i, failPos);
       var subB = A.slice(0, subA.length);
       
+      // Returns true is both are same
       var same = compareStrArray(subA, subB);
       
       if(same){
-        //addLine("same? = " + same);
+        // Check if the Char below A[failPos] and A[failPos] are not the same
+        // If not same, then succeed and move onto next failPos
         if(A[failPos] !== A[subA.length]){
-          //addLine("inner same? = " + (A[failPos] === A[subA.length]));
           B[failPos] = subA.length;
           flag = true;
           break;
