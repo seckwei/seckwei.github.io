@@ -6,7 +6,7 @@
 div.square {
 	width: 100px;
 	height: 100px;
-}
-	div.square #sq1 {
-		background-color: #555555;
+	}
+	div.square#sq1 {
+		background-color: yellow;
 	}
