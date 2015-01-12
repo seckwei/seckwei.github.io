@@ -1,2 +1,12 @@
-div#sq1 {
+/*
+	Seck Wei, Lim - 2015
+	CSS for various random stuff to play with
+*/
+
+div.square {
+	width: 100px;
+	height: 100px;
 }
+	div.square #sq1 {
+		background-color: #555555;
+	}
