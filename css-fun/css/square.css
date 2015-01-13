@@ -2,11 +2,37 @@
 	Seck Wei, Lim - 2015
 	CSS for various random stuff to play with
 */
+div.page-wrapper {
+	padding-top: 100px;
+	}
+	div.page-wrapper div.content-wrapper {
+		margin: 0 auto;
+		padding-top: 100px;
+		min-width: 300px;
+		max-width: 350px;
+		text-align: center;
+		perspective: 800px;
+	}
 
 div.square {
+	display: inline-block;
+	margin: 2px;
 	width: 100px;
 	height: 100px;
+	transform-style: preserve-3d;
+	
+	/* Hover Off */
+	transition: transform 1s; 
 	}
 	div.square#sq1 {
-		background-color: yellow;
+		background-color: rgb(0, 216, 255);
 	}
+	div.square#sq1:hover{
+		background-color: rgb(0, 200, 200);
+		transform: scale(1.1,1.1);
+		transition: transform 1s;
+	}
+
+div.clear {
+	clear: both;
+}
