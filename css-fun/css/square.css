@@ -2,34 +2,71 @@
 	Seck Wei, Lim - 2015
 	CSS for various random stuff to play with
 */
+
+/** TABLE OF CONTENTS
+	1. IMPORTED FONTS
+	2. STANDARD HTML TAGS
+	3. ANIMATIONS
+**/
+
+/** IMPORTED FONTS **/
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+/** STANDARD HTML TAGS **/
 html, body {
 	margin: 0;
 	height: 100%;
+}
+
+h1, h2, h3, h4, h5 {
+	font-family: 'Open Sans', sans-serif;
+}
+h1{
+	font-size: 18pt;
+	font-weight: bold;
 }
 
 div.page-wrapper {
 	padding-top: 50px;
 	min-height: 100%;
 	background-color: #eee;
+	text-align: center;
 	}
 	div.page-wrapper div.content-wrapper {
+		display: inline-block;
 		margin: 0px auto 10px; 
 		padding: 20px;
-		min-width: 300px;
+		min-width: 320px;
 		max-width: 320px;
+		vertical-align: top;
 		perspective: 800px;
 		background-color: #ccc;
 		}
-		div.page-wrapper div.content-wrapper#cw1 {
-			text-align: center;
-		}
-		div.page-wrapper div.content-wrapper#cw2 {
+		div.page-wrapper div.content-wrapper div.cw-title {
+			margin-bottom: 5px;
+			padding: 3px 0 3px 0;
+			font-family: 'Open Sans', sans-serif;
+			}
+			div.page-wrapper div.content-wrapper div.cw-title h1 {
+				display: inline-block;
+			}
+			div.page-wrapper div.content-wrapper div.cw-title div.play {
+				position: relative;
+				transform: translateY(-16%);
+				display: inline-block;
+				padding: 2px 4px 0px 2px;
+				top: 0px;
+				margin: 0 5px 0 5px;
+				border: 1px solid #ddd;
+				background-color: #eee;
+			}
+		div.page-wrapper div.content-wrapper.cw2 {
 			/* empty */
 			}
-			div.page-wrapper div.content-wrapper#cw2  div.flow-right	{
+			div.page-wrapper div.content-wrapper.cw2  div.flow-right	{
 				text-align: left;
 			}
-			div.page-wrapper div.content-wrapper#cw2  div.flow-left	{
+			div.page-wrapper div.content-wrapper.cw2  div.flow-left	{
 				text-align: right;
 			}
 
@@ -41,12 +78,12 @@ div.square {
 	transform-style: preserve-3d;
 	}
 	/* SQUARE 1 */
-	div.square#sq1 {
+	div.square.sq1 {
 		background-color: #1CA1E2;
 		/* Hover Off*/
 		transition: transform 1s;
 		}
-		div.square#sq1:hover{
+		div.square.sq1:hover{
 			background-color: #0690D3;
 			transform: scale(1.1,1.1);
 			transition: transform 0.3s;
