@@ -5,17 +5,66 @@
   <title>CSS Fun</title>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/square.css">
-  <script src=""></script>
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 </head>
 
 <body>
 	<div class="page-wrapper">
-		<div class="content-wrapper">
+		<div class="content-wrapper" id="cw1">
 			<div class="square" id="sq1"></div>
 			<div class="square" id="sq1"></div>
 			<div class="square" id="sq1"></div>
-			<div class="clear"></div>
+			
+			<div class="square" id="sq1"></div>
+			<div class="square" id="sq1"></div>
+			<div class="square" id="sq1"></div>
+			
+			<div class="square" id="sq1"></div>
+			<div class="square" id="sq1"></div>
+			<div class="square" id="sq1"></div>
+		</div>
+		
+		<div class="content-wrapper" id="cw2">
+			<!-- ROW 1, Right > Right > Down -->
+			<div class="flow-right">
+				<div class="square sq2" id="static" data-order="1">
+					<div class="square sq2" id="flip-right"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="2">
+					<div class="square sq2" id="flip-right"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="3">
+					<div class="square sq2" id="flip-down"></div>
+				</div>
+			</div>
+			
+			<!-- ROW 2, Left > Left > Down -->
+			<div class="flow-left">
+				<div class="square sq2" id="static" data-order="6">
+					<div class="square sq2" id="flip-down"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="5">
+					<div class="square sq2" id="flip-left"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="4">
+					<div class="square sq2" id="flip-left"></div>
+				</div>
+			</div>
+			
+			<!-- ROW 3, Right > Right -->
+			<div class="flow-right">
+				<div class="square sq2" id="static" data-order="7">
+					<div class="square sq2" id="flip-right"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="8">
+					<div class="square sq2" id="flip-right"></div>
+				</div>
+				<div class="square sq2" id="static" data-order="9">
+				</div>
+			</div>
 		</div>
 	</div>
+	
+  <script src="js/tiling.js"></script>
 </body>
 </html>

@@ -2,37 +2,157 @@
 	Seck Wei, Lim - 2015
 	CSS for various random stuff to play with
 */
+html, body {
+	margin: 0;
+	height: 100%;
+}
+
 div.page-wrapper {
-	padding-top: 100px;
+	padding-top: 50px;
+	min-height: 100%;
+	background-color: #eee;
 	}
 	div.page-wrapper div.content-wrapper {
-		margin: 0 auto;
-		padding-top: 100px;
+		margin: 0px auto 10px; 
+		padding: 20px;
 		min-width: 300px;
-		max-width: 350px;
-		text-align: center;
+		max-width: 320px;
 		perspective: 800px;
-	}
+		background-color: #ccc;
+		}
+		div.page-wrapper div.content-wrapper#cw1 {
+			text-align: center;
+		}
+		div.page-wrapper div.content-wrapper#cw2 {
+			/* empty */
+			}
+			div.page-wrapper div.content-wrapper#cw2  div.flow-right	{
+				text-align: left;
+			}
+			div.page-wrapper div.content-wrapper#cw2  div.flow-left	{
+				text-align: right;
+			}
 
 div.square {
-	display: inline-block;
 	margin: 2px;
 	width: 100px;
+	display: inline-block;
 	height: 100px;
 	transform-style: preserve-3d;
-	
-	/* Hover Off */
-	transition: transform 1s; 
 	}
+	/* SQUARE 1 */
 	div.square#sq1 {
-		background-color: rgb(0, 216, 255);
-	}
-	div.square#sq1:hover{
-		background-color: rgb(0, 200, 200);
-		transform: scale(1.1,1.1);
+		background-color: #1CA1E2;
+		/* Hover Off*/
 		transition: transform 1s;
-	}
+		}
+		div.square#sq1:hover{
+			background-color: #0690D3;
+			transform: scale(1.1,1.1);
+			transition: transform 0.3s;
+		}
+		
+	/* SQUARE 2 STATIC */
+	div.square.sq2{
+			background-color: #FF6014;
+		}
+		div.square.sq2#static {
+			display: none;
+			}
+			div.square.sq2#static:hover{
+				/*transform: translate(108px);
+				transition: 1s;
+				transition-delay: 0.6s;*/
+			}
+			
+		/* SQUARE 2 FLIPPING */
+		div.square.sq2#flip-right,
+		div.square.sq2#flip-down,
+		div.square.sq2#flip-left
+		{
+			margin-top: 0px;
+			margin-left: 0px;
+		}
+		div.square.sq2#flip-right{	
+			-webkit-animation: flipright 1s;
+							animation: flipright 1s;
+		}
+		div.square.sq2#flip-down{	
+			-webkit-animation: flipdown 1s;
+							animation: flipdown 1s;
+		}
+		div.square.sq2#flip-left{	
+			-webkit-animation: flipleft 1s;
+							animation: flipleft 1s;
+		}
 
 div.clear {
 	clear: both;
+}	
+
+/** ANIMATIONS **/
+/* FLIP RIGHT */
+@-webkit-keyframes flipright {
+	0% {
+		transform-origin: 104% 50%;
+		transform: rotateY(0deg); 
+	}
+	100%{
+		transform-origin: 104% 50%;
+		transform: rotateY(180deg); 
+	}
+}
+@keyframes flipright {
+	from { 
+		transform-origin: 104% 50%;
+		transform: rotateY(0deg); 
+	}
+	to {
+		transform-origin: 104% 50%;
+		transform: rotateY(180deg); 
+	}
+}
+
+/* FLIP DOWN */
+@-webkit-keyframes flipdown {
+	0% {
+		transform-origin: 50% 104%;
+		transform: rotateX(0deg); 
+	}
+	100%{
+		transform-origin: 50% 104%;
+		transform: rotateX(180deg); 
+	}
+}
+@keyframes flipdown {
+	from { 
+		transform-origin: 50% 104%;
+		transform: rotateX(0deg); 
+	}
+	to {
+		transform-origin: 50% 104%;
+		transform: rotateX(180deg); 
+	}
+}
+
+/* FLIP LEFT */
+@-webkit-keyframes flipleft {
+	0% {
+		transform-origin: -4% 50%;
+		transform: rotateY(0deg); 
+	}
+	100%{
+		transform-origin: -4% 50%;
+		transform: rotateY(180deg); 
+	}
+}
+@keyframes flipleft {
+	from { 
+		transform-origin: -4% 50%;
+		transform: rotateY(0deg); 
+	}
+	to {
+		transform-origin: -4% 50%;
+		transform: rotateY(180deg); 
+	}
 }
