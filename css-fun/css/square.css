@@ -38,6 +38,8 @@ div.page-wrapper {
 		padding: 20px;
 		min-width: 320px;
 		max-width: 320px;
+		min-height: 356px;
+		max-height: 356px;
 		vertical-align: top;
 		perspective: 800px;
 		background-color: #ccc;
