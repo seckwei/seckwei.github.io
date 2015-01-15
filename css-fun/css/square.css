@@ -44,10 +44,8 @@ h1{
 			display: inline-block;
 			margin: 0px auto 10px; 
 			padding: 20px;
-			min-width: 320px;
-			max-width: 320px;
-			min-height: 356px;
-			max-height: 356px;
+			min-width : 320px;	max-width : 320px;
+			min-height: 356px;	max-height: 356px;
 			vertical-align: top;
 			perspective: 600px;
 			background-color: #ccc;
@@ -65,9 +63,9 @@ h1{
 					position: relative;
 					transform: translateY(-16%);
 					display: inline-block;
+					margin: 0 5px 0 5px;
 					padding: 2px 4px 0px 2px;
 					top: 0px;
-					margin: 0 5px 0 5px;
 					border: 1px solid #ddd;
 					background-color: #eee;
 					cursor: pointer;
@@ -86,8 +84,8 @@ h1{
 	/** 2.2 SQUARE **/
 	div.square {
 		margin: 2px;
-		width: 100px;
 		display: inline-block;
+		width: 100px;
 		height: 100px;
 		transform-style: preserve-3d;
 		}
@@ -148,6 +146,7 @@ h1{
 					-webkit-animation: floatup 1s;
 									animation: floatup 1s;
 					-webkit-animation-fill-mode: forwards;
+									animation-fill-mode: forwards;
 				}
 				div.square.sq3#hoverOff{
 					transform : translateZ(10px);
@@ -158,6 +157,7 @@ h1{
 					-webkit-animation: hoverfloat 0.5s;
 									animation: hoverfloat 0.5s;
 					-webkit-animation-fill-mode: forwards;
+									animation-fill-mode: forwards;
 				}
 			
 /** 3. ANIMATIONS **/
