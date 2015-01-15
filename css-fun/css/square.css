@@ -3,9 +3,13 @@
 	CSS for various random stuff to play with
 */
 
-/** TABLE OF CONTENTS
+/** 
+TABLE OF CONTENTS
 	1. IMPORTED FONTS
 	2. STANDARD HTML TAGS
+		2.1 PAGE WRAPPER
+			2.1.1 CONTENT WRAPPER
+		2.2 SQUARE
 	3. ANIMATIONS
 **/
 
@@ -41,7 +45,7 @@ div.page-wrapper {
 		min-height: 356px;
 		max-height: 356px;
 		vertical-align: top;
-		perspective: 800px;
+		perspective: 600px;
 		background-color: #ccc;
 		}
 		div.page-wrapper div.content-wrapper div.cw-title {
@@ -65,10 +69,10 @@ div.page-wrapper {
 		div.page-wrapper div.content-wrapper.cw2 {
 			/* empty */
 			}
-			div.page-wrapper div.content-wrapper.cw2  div.flow-right	{
+			div.page-wrapper div.content-wrapper  div.flow-right	{
 				text-align: left;
 			}
-			div.page-wrapper div.content-wrapper.cw2  div.flow-left	{
+			div.page-wrapper div.content-wrapper  div.flow-left	{
 				text-align: right;
 			}
 
@@ -90,7 +94,8 @@ div.square {
 			transform: scale(1.1,1.1);
 			transition: transform 0.3s;
 		}
-		
+	
+	/* SQUARE 2 */
 	/* SQUARE 2 STATIC */
 	div.square.sq2{
 			background-color: #FF6014;
@@ -124,12 +129,20 @@ div.square {
 			-webkit-animation: flipleft 1s;
 							animation: flipleft 1s;
 		}
+		
+		/* SQUARE 3 */
+		div.square.sq3{
+			background-color: #4f4f4f;
+			}
+			div.square.sq3#float-up{
+				-webkit-animation: floatup 2s;
+								animation: floatup 2s;
+				-webkit-animation-fill-mode:forwards;
+			}
 
-div.clear {
-	clear: both;
-}	
 
-/** ANIMATIONS **/
+/** -------- ANIMATIONS -------- **/
+/* ----- CONTENT #2 ----- */
 /* FLIP RIGHT */
 @-webkit-keyframes flipright {
 	0% {
@@ -194,4 +207,22 @@ div.clear {
 		transform-origin: -4% 50%;
 		transform: rotateY(180deg); 
 	}
+}
+
+/* ----- CONTENT #3 ----- */
+@-webkit-keyframes floatup {
+	0% {			
+		-webkit-transform-origin: 50% 50%;
+		-webkit-transform: scale(0.0);
+		-webkit-box-shadow: 3px 3px 3px #333;
+	}
+	75% {
+		-webkit-transform: scale(1.0);
+		-webkit-box-shadow: 4px 4px 3px #333;
+	}
+	100% {
+		-webkit-transform: translateZ(10px);
+		-webkit-box-shadow: 10px 10px 3px #333;
+	}
+}
 }
