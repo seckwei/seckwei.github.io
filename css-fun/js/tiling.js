@@ -5,12 +5,12 @@ var tiling = {
 	play: function(text){
 		
 		if(text == "Play"){
-			$(".cw2 > .cw-title > .play").html("Reset");
+			$(".cw2 .cw-title .play").html("Reset");
 			tiling.director(1);
 		}
 		
 		if(text == "Reset"){
-			$(".cw2 > .cw-title > .play").html("Play");
+			$(".cw2 .cw-title .play").html("Play");
 			$(".sq2#static").each(function(){
 				$(this).css("display", "none");
 			});
@@ -18,7 +18,7 @@ var tiling = {
 	},
 	
 	add_flip: function(num){
-		$("[data-order='"+ num +"']").css("display", "inline-block");
+		$(".cw2 :not(.first) [data-order='"+ num +"']").css("display", "inline-block");
 	},
 	
 	director: function(order){
