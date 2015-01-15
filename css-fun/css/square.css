@@ -6,17 +6,19 @@
 /** 
 TABLE OF CONTENTS
 	1. IMPORTED FONTS
-	2. STANDARD HTML TAGS
+	2. PAGE STRUCTURE & OTHER HTML
 		2.1 PAGE WRAPPER
 			2.1.1 CONTENT WRAPPER
 		2.2 SQUARE
 	3. ANIMATIONS
+		3.1 FOLD OVER TILING
+		3.2 FLAOT UP TILING
 **/
 
-/** IMPORTED FONTS **/
+/** 1. IMPORTED FONTS **/
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
-/** STANDARD HTML TAGS **/
+/** 2. PAGE STRUCTURE & OTHER HTML **/
 html, body {
 	margin: 0;
 	height: 100%;
@@ -30,42 +32,47 @@ h1{
 	font-weight: bold;
 }
 
-div.page-wrapper {
-	padding-top: 50px;
-	min-height: 100%;
-	background-color: #eee;
-	text-align: center;
-	}
-	div.page-wrapper div.content-wrapper {
-		display: inline-block;
-		margin: 0px auto 10px; 
-		padding: 20px;
-		min-width: 320px;
-		max-width: 320px;
-		min-height: 356px;
-		max-height: 356px;
-		vertical-align: top;
-		perspective: 600px;
-		background-color: #ccc;
+	/** 2.1 PAGE WRAPPER **/
+	div.page-wrapper {
+		padding-top: 50px;
+		min-height: 100%;
+		background-color: #eee;
+		text-align: center;
 		}
-		div.page-wrapper div.content-wrapper div.cw-title {
-			margin-bottom: 5px;
-			padding: 3px 0 3px 0;
-			font-family: 'Open Sans', sans-serif;
+		/** 2.1.1 CONTENT WRAPPER **/
+		div.page-wrapper div.content-wrapper {
+			display: inline-block;
+			margin: 0px auto 10px; 
+			padding: 20px;
+			min-width: 320px;
+			max-width: 320px;
+			min-height: 356px;
+			max-height: 356px;
+			vertical-align: top;
+			perspective: 600px;
+			background-color: #ccc;
 			}
-			div.page-wrapper div.content-wrapper div.cw-title h1 {
-				display: inline-block;
-			}
-			div.page-wrapper div.content-wrapper div.cw-title div.play {
-				position: relative;
-				transform: translateY(-16%);
-				display: inline-block;
-				padding: 2px 4px 0px 2px;
-				top: 0px;
-				margin: 0 5px 0 5px;
-				border: 1px solid #ddd;
-				background-color: #eee;
-			}
+			div.page-wrapper div.content-wrapper div.cw-title {
+				margin-bottom: 5px;
+				padding: 3px 0 3px 0;
+				font-family: 'Open Sans', sans-serif;
+				}
+				div.page-wrapper div.content-wrapper div.cw-title h1 {
+					display: inline-block;
+				}
+				/* PLAY BUTTON */
+				div.page-wrapper div.content-wrapper div.cw-title div.play {
+					position: relative;
+					transform: translateY(-16%);
+					display: inline-block;
+					padding: 2px 4px 0px 2px;
+					top: 0px;
+					margin: 0 5px 0 5px;
+					border: 1px solid #ddd;
+					background-color: #eee;
+					cursor: pointer;
+				}
+				
 		div.page-wrapper div.content-wrapper.cw2 {
 			/* empty */
 			}
@@ -76,153 +83,202 @@ div.page-wrapper {
 				text-align: right;
 			}
 
-div.square {
-	margin: 2px;
-	width: 100px;
-	display: inline-block;
-	height: 100px;
-	transform-style: preserve-3d;
-	}
-	/* SQUARE 1 */
-	div.square.sq1 {
-		background-color: #1CA1E2;
-		/* Hover Off*/
-		transition: transform 1s;
+	/** 2.2 SQUARE **/
+	div.square {
+		margin: 2px;
+		width: 100px;
+		display: inline-block;
+		height: 100px;
+		transform-style: preserve-3d;
 		}
-		div.square.sq1:hover{
-			background-color: #0690D3;
-			transform: scale(1.1,1.1);
-			transition: transform 0.3s;
-		}
-	
-	/* SQUARE 2 */
-	/* SQUARE 2 STATIC */
-	div.square.sq2{
-			background-color: #FF6014;
-		}
-		div.square.sq2#static {
-			display: none;
+		/* SQUARE 1 */
+		div.square.sq1 {
+			background-color: #1CA1E2;
+			/* Hover Off*/
+			transition: transform 1s;
 			}
-			div.square.sq2#static:hover{
-				/*transform: translate(108px);
-				transition: 1s;
-				transition-delay: 0.6s;*/
+			div.square.sq1:hover{
+				/* Hover On*/
+				background-color: #0690D3;
+				transform: scale(1.1,1.1);
+				transition: transform 0.3s;
+			}
+		
+		/* SQUARE 2 */
+		/* SQUARE 2 STATIC */
+		div.square.sq2{
+				background-color: #FF6014;
+			}
+			div.square.sq2#static {
+				display: none;
+				}
+				div.square.sq2#static:hover{
+					/*transform: translate(108px);
+					transition: 1s;
+					transition-delay: 0.6s;*/
+				}
+				
+			/* SQUARE 2 FLIPPING */
+			div.square.sq2#flip-right,
+			div.square.sq2#flip-down,
+			div.square.sq2#flip-left
+			{
+				margin-top: 0px;
+				margin-left: 0px;
+			}
+			div.square.sq2#flip-right{	
+				-webkit-animation: flipright 1s;
+								animation: flipright 1s;
+			}
+			div.square.sq2#flip-down{	
+				-webkit-animation: flipdown 1s;
+								animation: flipdown 1s;
+			}
+			div.square.sq2#flip-left{	
+				-webkit-animation: flipleft 1s;
+								animation: flipleft 1s;
 			}
 			
-		/* SQUARE 2 FLIPPING */
-		div.square.sq2#flip-right,
-		div.square.sq2#flip-down,
-		div.square.sq2#flip-left
-		{
-			margin-top: 0px;
-			margin-left: 0px;
+			/* SQUARE 3 */
+			div.square.sq3{
+				display: none;
+				background-color: #49CC26;
+				}
+				div.square.sq3#float-up{				
+					-webkit-animation: floatup 1s;
+									animation: floatup 1s;
+					-webkit-animation-fill-mode: forwards;
+				}
+				div.square.sq3#hoverOff{
+					transform : translateZ(10px);
+					box-shadow: 10px 10px 3px #666;
+					transition: 0.5s; 
+				}
+				div.square.sq3#hoverOff:hover{
+					-webkit-animation: hoverfloat 0.5s;
+									animation: hoverfloat 0.5s;
+					-webkit-animation-fill-mode: forwards;
+				}
+			
+/** 3. ANIMATIONS **/
+/* 3.1 Fold Over Tiling */
+	/* FLIP RIGHT */
+	@-webkit-keyframes flipright {
+		0% {
+			transform-origin: 104% 50%;
+			transform: rotateY(0deg); 
 		}
-		div.square.sq2#flip-right{	
-			-webkit-animation: flipright 1s;
-							animation: flipright 1s;
+		100%{
+			transform-origin: 104% 50%;
+			transform: rotateY(180deg); 
 		}
-		div.square.sq2#flip-down{	
-			-webkit-animation: flipdown 1s;
-							animation: flipdown 1s;
+	}
+	@keyframes flipright {
+		from { 
+			transform-origin: 104% 50%;
+			transform: rotateY(0deg); 
 		}
-		div.square.sq2#flip-left{	
-			-webkit-animation: flipleft 1s;
-							animation: flipleft 1s;
+		to {
+			transform-origin: 104% 50%;
+			transform: rotateY(180deg); 
 		}
-		
-		/* SQUARE 3 */
-		div.square.sq3{
-			background-color: #4f4f4f;
-			}
-			div.square.sq3#float-up{
-				-webkit-animation: floatup 2s;
-								animation: floatup 2s;
-				-webkit-animation-fill-mode:forwards;
-			}
+	}
 
-
-/** -------- ANIMATIONS -------- **/
-/* ----- CONTENT #2 ----- */
-/* FLIP RIGHT */
-@-webkit-keyframes flipright {
-	0% {
-		transform-origin: 104% 50%;
-		transform: rotateY(0deg); 
+	/* FLIP DOWN */
+	@-webkit-keyframes flipdown {
+		0% {
+			transform-origin: 50% 104%;
+			transform: rotateX(0deg); 
+		}
+		100%{
+			transform-origin: 50% 104%;
+			transform: rotateX(-180deg); 
+		}
 	}
-	100%{
-		transform-origin: 104% 50%;
-		transform: rotateY(180deg); 
-	}
-}
-@keyframes flipright {
-	from { 
-		transform-origin: 104% 50%;
-		transform: rotateY(0deg); 
-	}
-	to {
-		transform-origin: 104% 50%;
-		transform: rotateY(180deg); 
-	}
-}
-
-/* FLIP DOWN */
-@-webkit-keyframes flipdown {
-	0% {
-		transform-origin: 50% 104%;
-		transform: rotateX(0deg); 
-	}
-	100%{
-		transform-origin: 50% 104%;
-		transform: rotateX(180deg); 
-	}
-}
-@keyframes flipdown {
+	@keyframes flipdown {
 	from { 
 		transform-origin: 50% 104%;
 		transform: rotateX(0deg); 
 	}
 	to {
 		transform-origin: 50% 104%;
-		transform: rotateX(180deg); 
+		transform: rotateX(-180deg); 
 	}
 }
 
-/* FLIP LEFT */
-@-webkit-keyframes flipleft {
-	0% {
-		transform-origin: -4% 50%;
-		transform: rotateY(0deg); 
+	/* FLIP LEFT */
+	@-webkit-keyframes flipleft {
+		0% {
+			transform-origin: -4% 50%;
+			transform: rotateY(0deg); 
+		}
+		100%{
+			transform-origin: -4% 50%;
+			transform: rotateY(-180deg); 
+		}
 	}
-	100%{
-		transform-origin: -4% 50%;
-		transform: rotateY(180deg); 
-	}
-}
-@keyframes flipleft {
+	@keyframes flipleft {
 	from { 
 		transform-origin: -4% 50%;
 		transform: rotateY(0deg); 
 	}
 	to {
 		transform-origin: -4% 50%;
-		transform: rotateY(180deg); 
+		transform: rotateY(-180deg); 
 	}
 }
 
-/* ----- CONTENT #3 ----- */
-@-webkit-keyframes floatup {
-	0% {			
-		-webkit-transform-origin: 50% 50%;
-		-webkit-transform: scale(0.0);
-		-webkit-box-shadow: 3px 3px 3px #333;
+/* 3.2 Float Up Tiling */
+	/* Float Up */
+	@-webkit-keyframes floatup {
+		0% {			
+			-webkit-transform-origin: 50% 50%;
+			-webkit-opacity: 0.0;
+			-webkit-box-shadow: 3px 3px 3px #666;
+		}
+		50% {
+			-webkit-opacity: 1.0;
+			-webkit-box-shadow: 4px 4px 3px #666;
+		}
+		100% {
+			-webkit-transform: translateZ(10px);
+			-webkit-box-shadow: 10px 10px 3px #666;
+		}
 	}
-	75% {
-		-webkit-transform: scale(1.0);
-		-webkit-box-shadow: 4px 4px 3px #333;
+	@keyframes floatup {
+		0% {			
+			transform-origin: 50% 50%;
+			opacity: 0.0;
+			box-shadow: 3px 3px 3px #666;
+		}
+		75% {
+			opacity: 0.0;
+			box-shadow: 4px 4px 3px #666;
+		}
+		100% {
+			transform: translateZ(10px);
+			box-shadow: 10px 10px 3px #666;
+		}
 	}
-	100% {
-		-webkit-transform: translateZ(10px);
-		-webkit-box-shadow: 10px 10px 3px #333;
+
+	/* Hover Animations */
+	@-webkit-keyframes hoverfloat {
+		from {
+			-webkit-transform: translateZ(10px);
+			-webkit-box-shadow: 10px 10px 3px #666;
+		}
+		to {
+			-webkit-transform: translateZ(20px);
+			-webkit-box-shadow: 20px 20px 3px #666;
+		}
 	}
-}
+	@keyframes hoverfloat {
+	from {
+		transform: translateZ(10px);
+		box-shadow: 10px 10px 3px #666;
+	}
+	to {
+		transform: translateZ(20px);
+		box-shadow: 20px 20px 3px #666;
+	}
 }
