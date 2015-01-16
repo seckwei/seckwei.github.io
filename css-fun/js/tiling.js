@@ -105,4 +105,46 @@ var tiling_float = {
 		});
 	}
 	
-}				
+}
+
+var tiling_float_3d = {
+	
+	// Play function
+	play: function(text){
+		if(text == "Play"){
+			$(".cw4 .cw-title .play").html("Reset");
+			tiling_float_3d.director(1);
+		}
+		
+		if(text == "Reset"){
+			$(".cw4 .cw-title .play").html("Play");
+			$(".sq4#castshadow").each(function(){
+				$(this).css("display", "none");
+			});
+		}
+	},
+	
+	// Add a tile
+	add_tile: function(num){
+		$(".cw4 :not(.first) [data-order='"+num+"']").css("display", "inline-block");
+	},
+	
+	// Queue the next tile
+	director: function(order){
+		if(order != 9){
+			
+			if(order == 1) tiling_float_3d.add_tile(1);
+			tiling_float_3d.actor(order);
+		}
+	},
+	
+	// Call the add_tile
+	actor: function(order){
+		$(".cw4 :not(.first) [data-order='"+order+"']").one("animationend webkitAnimationEnd", function (){
+			order++;
+			tiling_float_3d.add_tile(order);
+			tiling_float_3d.director(order);
+		});
+	}
+	
+}
