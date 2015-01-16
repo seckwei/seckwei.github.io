@@ -12,7 +12,8 @@ TABLE OF CONTENTS
 		2.2 SQUARE
 	3. ANIMATIONS
 		3.1 FOLD OVER TILING
-		3.2 FLAOT UP TILING
+		3.2 FLOAT UP TILING
+		3.3 3D FLOAT UP TILING
 **/
 
 /** 1. IMPORTED FONTS **/
@@ -71,14 +72,26 @@ h1{
 					cursor: pointer;
 				}
 				
-		div.page-wrapper div.content-wrapper.cw2 {
-			/* empty */
-			}
-			div.page-wrapper div.content-wrapper  div.flow-right	{
-				text-align: left;
-			}
-			div.page-wrapper div.content-wrapper  div.flow-left	{
-				text-align: right;
+			div.page-wrapper div.content-wrapper.cw2 {
+				/* empty */
+				}
+				div.page-wrapper div.content-wrapper  div.flow-right	{
+					text-align: left;
+				}
+				div.page-wrapper div.content-wrapper  div.flow-left	{
+					text-align: right;
+				}
+			
+			/* 3D-wrapper */
+			div.page-wrapper div.content-wrapper.cw4 div.wrapper-3d {
+				margin: 0 auto;
+				min-width : inherit;	max-width : inherit;
+				min-height: inherit;	max-height: inherit;
+				padding: 0px 20px 0px 5px;
+				border: 0px solid;
+				background-color: #aaa;
+				transform: skew(-15deg, 0deg) rotateX(60deg) translateX(-5%) translateY(-20%);
+				transform-style: preserve-3d;
 			}
 
 	/** 2.2 SQUARE **/
@@ -160,6 +173,30 @@ h1{
 									animation-fill-mode: forwards;
 				}
 			
+			/* SQUARE 4 */
+			div.square.sq4{
+				background-color: #5E287A;
+				}
+				div.square.sq4#float-up-3d{
+					-webkit-transform: translateZ(1px);
+					-webkit-animation: floatup-3d 2s;
+									animation: floatup-3d 2s;
+					-webkit-animation-fill-mode: forwards;
+									animation-fill-mode: forwards;
+				}		
+			
+			/* SQUARE FAUX SHADOW */
+			div.square.sqshadow{
+				display: none;
+				background-color: #666;
+				}
+				div.square.sqshadow#cast-shadow{
+					-webkit-animation: castshadow 2s;
+									animation: castshadow 2s;
+					-webkit-animation-fill-mode: forwards;
+									animation-fill-mode: forwards;
+				}
+			
 /** 3. ANIMATIONS **/
 /* 3.1 Fold Over Tiling */
 	/* FLIP RIGHT */
@@ -234,13 +271,11 @@ h1{
 		0% {			
 			-webkit-transform-origin: 50% 50%;
 			-webkit-opacity: 0.0;
+			-webkit-transform: translateZ(0px);
 			-webkit-box-shadow: 3px 3px 3px #666;
 		}
-		50% {
-			-webkit-opacity: 1.0;
-			-webkit-box-shadow: 4px 4px 3px #666;
-		}
 		100% {
+			-webkit-opacity: 1.0;
 			-webkit-transform: translateZ(10px);
 			-webkit-box-shadow: 10px 10px 3px #666;
 		}
@@ -249,13 +284,11 @@ h1{
 		0% {			
 			transform-origin: 50% 50%;
 			opacity: 0.0;
+			transform: translateZ(0px);
 			box-shadow: 3px 3px 3px #666;
 		}
-		75% {
-			opacity: 0.0;
-			box-shadow: 4px 4px 3px #666;
-		}
 		100% {
+			opacity: 1.0;
 			transform: translateZ(10px);
 			box-shadow: 10px 10px 3px #666;
 		}
@@ -282,3 +315,37 @@ h1{
 		box-shadow: 20px 20px 3px #666;
 	}
 }
+
+/* 3.3 3D Float Up Tiling */
+	/* Float Up */
+	@-webkit-keyframes floatup-3d {
+		0% {			
+			-webkit-transform-origin: 50% 50%;
+			-webkit-opacity: 0.0;		
+		}
+		10% {
+			-webkit-opacity: 1.0;
+			-webkit-transform: translateZ(1px);
+		}
+		55% {
+			-webkit-transform: rotateX(5deg) translate(-125%, -100%) translateZ(100px);
+		}
+		100% {
+			-webkit-transform: translate(-15px, -15px) translateZ(1px);
+		}
+	}
+	
+	@-webkit-keyframes castshadow {
+		0% {	
+		}
+		10% {
+			-webkit-transform: translateX(0);
+		}
+		55% {
+			-webkit-transform: translate(100px, 100px);
+		}
+		100% {
+			-webkit-transform: translate(15px, 15px);
+		}
+	}
+		
