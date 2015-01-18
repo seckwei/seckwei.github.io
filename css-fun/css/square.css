@@ -88,11 +88,20 @@ h1{
 				min-width : inherit;	max-width : inherit;
 				min-height: inherit;	max-height: inherit;
 				padding: 0px 20px 0px 5px;
-				border: 0px solid;
-				background-color: #aaa;
-				transform: skew(-15deg, 0deg) rotateX(60deg) translateX(-5%) translateY(-20%);
+				transform: skew(-15deg, 0deg) rotateX(50deg) translateX(-5%) translateY(-20%);
 				transform-style: preserve-3d;
-			}
+				background-color: #aaa;			
+				}
+				div.page-wrapper div.content-wrapper.cw4 div.wrapper-3d div.flow-right, 
+				div.page-wrapper div.content-wrapper.cw4 div.wrapper-3d div.flow-left {
+					transform: translateZ(1px);
+				}
+				div.page-wrapper div.content-wrapper.cw4 div.wrapper-3d div.floor {
+					min-width : inherit;	max-width : inherit;
+					min-height: inherit;	max-height: inherit;
+					border: 0px solid;
+					background-color: #aaa;
+				}
 
 	/** 2.2 SQUARE **/
 	div.square {
@@ -164,7 +173,7 @@ h1{
 				div.square.sq3#hoverOff{
 					transform : translateZ(10px);
 					box-shadow: 10px 10px 3px #666;
-					transition: 0.5s; 
+					transition: 0.5s;
 				}
 				div.square.sq3#hoverOff:hover{
 					-webkit-animation: hoverfloat 0.5s;
@@ -176,9 +185,9 @@ h1{
 			/* SQUARE 4 */
 			div.square.sq4{
 				background-color: #5E287A;
+				transform: translateZ(3px);
 				}
 				div.square.sq4#float-up-3d{
-					-webkit-transform: translateZ(1px);
 					-webkit-animation: floatup-3d 2s;
 									animation: floatup-3d 2s;
 					-webkit-animation-fill-mode: forwards;
@@ -189,6 +198,7 @@ h1{
 			div.square.sqshadow{
 				display: none;
 				background-color: #666;
+				transform: translateZ(2px);
 				}
 				div.square.sqshadow#cast-shadow{
 					-webkit-animation: castshadow 2s;
@@ -325,18 +335,19 @@ h1{
 		}
 		10% {
 			-webkit-opacity: 1.0;
-			-webkit-transform: translateZ(1px);
+			-webkit-transform: translateZ(3px);
 		}
 		55% {
-			-webkit-transform: rotateX(5deg) translate(-125%, -100%) translateZ(100px);
+			-webkit-transform: rotateX(5deg) translate(-110%, -150%) translateZ(100px);
 		}
 		100% {
-			-webkit-transform: translate(-15px, -15px) translateZ(1px);
+			-webkit-transform: translate(-15px, -15px) translateZ(3px);
 		}
 	}
 	
 	@-webkit-keyframes castshadow {
-		0% {	
+		0% {			
+			-webkit-transform: translateZ(2px);
 		}
 		10% {
 			-webkit-transform: translateX(0);
@@ -345,7 +356,7 @@ h1{
 			-webkit-transform: translate(100px, 100px);
 		}
 		100% {
-			-webkit-transform: translate(15px, 15px);
+			-webkit-transform: translate(15px, 15px) translateZ(2px);
 		}
 	}
 		
