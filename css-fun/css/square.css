@@ -10,6 +10,7 @@ TABLE OF CONTENTS
 		2.1 PAGE WRAPPER
 			2.1.1 CONTENT WRAPPER
 		2.2 SQUARE
+		2.3 RECTANGLE FOR DNA
 	3. ANIMATIONS
 		3.1 FOLD OVER TILING
 		3.2 FLOAT UP TILING
@@ -206,7 +207,41 @@ h1{
 					-webkit-animation-fill-mode: forwards;
 									animation-fill-mode: forwards;
 				}
-			
+				
+	/** 2.3 RECTANGLE FOR DNA **/
+	div.dna {
+	}	
+	/* Phosphate Backbone */
+	div.dna-backbone {
+		display: inline-block;
+		width	: 20px;
+		height: 300px;
+		background-color: #4FABBC;
+	}
+	
+	/* DNA Base Wrapper */
+	div.dna-base-wrapper {
+		display: inline-block;
+		vertical-align: top;
+		}
+		div.dna-base-wrapper.left		{ margin-left : -4px; }
+		div.dna-base-wrapper.right	{ margin-right: -4px; }
+		
+	/* DNA Bases */
+	div.dna-base {
+		margin: 5px 0px 5px 0px;
+		width : 60px;
+		height: 20px;
+		}
+		div.dna-base#a {	background-color: #FF6767; }
+		div.dna-base#g {	background-color: #FFD767; }
+		div.dna-base#t {	background-color: #9FEC5F; }
+		div.dna-base#c {	background-color: #6E61C9; }
+		
+	div.clear {
+		clear: both;
+	}
+	
 /** 3. ANIMATIONS **/
 /* 3.1 Fold Over Tiling */
 	/* FLIP RIGHT */
@@ -344,7 +379,7 @@ h1{
 			-webkit-transform: translate(-15px, -15px) translateZ(3px);
 		}
 	}
-	
+	/* Cast Shadow */
 	@-webkit-keyframes castshadow {
 		0% {			
 			-webkit-transform: translateZ(2px);
