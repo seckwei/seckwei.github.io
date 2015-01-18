@@ -1,6 +1,6 @@
 ﻿/*
 	Seck Wei, Lim - Jan 2015
-	CSS-Fun
+	CSS-Fun - tiling.js
 	Javascript for triggering events / changing html properties / etc
 */
 
