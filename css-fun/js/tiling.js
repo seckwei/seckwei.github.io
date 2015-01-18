@@ -118,7 +118,7 @@ var tiling_float_3d = {
 		
 		if(text == "Reset"){
 			$(".cw4 .cw-title .play").html("Play");
-			$(".sq4#castshadow").each(function(){
+			$(".square#cast-shadow").each(function(){
 				$(this).css("display", "none");
 			});
 		}
