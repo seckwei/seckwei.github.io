@@ -63,11 +63,10 @@ h1{
 				/* PLAY BUTTON */
 				div.page-wrapper div.content-wrapper div.cw-title div.play {
 					position: relative;
-					transform: translateY(-16%);
 					display: inline-block;
 					margin: 0 5px 0 5px;
 					padding: 2px 4px 0px 2px;
-					top: 0px;
+					transform: translateY(-16%);
 					border: 1px solid #ddd;
 					background-color: #eee;
 					cursor: pointer;
@@ -76,19 +75,19 @@ h1{
 			div.page-wrapper div.content-wrapper.cw2 {
 				/* empty */
 				}
-				div.page-wrapper div.content-wrapper  div.flow-right	{
+				div.page-wrapper div.content-wrapper div.flow-right	{
 					text-align: left;
 				}
-				div.page-wrapper div.content-wrapper  div.flow-left	{
+				div.page-wrapper div.content-wrapper div.flow-left	{
 					text-align: right;
 				}
 			
 			/* 3D-wrapper */
 			div.page-wrapper div.content-wrapper.cw4 div.wrapper-3d {
 				margin: 0 auto;
+				padding: 0px 20px 0px 5px;
 				min-width : inherit;	max-width : inherit;
 				min-height: inherit;	max-height: inherit;
-				padding: 0px 20px 0px 5px;
 				transform: skew(-15deg, 0deg) rotateX(50deg) translateX(-5%) translateY(-20%);
 				transform-style: preserve-3d;
 				background-color: #aaa;			
@@ -115,30 +114,24 @@ h1{
 		/* SQUARE 1 */
 		div.square.sq1 {
 			background-color: #1CA1E2;
-			/* Hover Off*/
+			/* hover off */
 			transition: transform 1s;
 			}
 			div.square.sq1:hover{
-				/* Hover On*/
+				/* hover on*/
 				background-color: #0690D3;
 				transform: scale(1.1,1.1);
 				transition: transform 0.3s;
 			}
 		
 		/* SQUARE 2 */
-		/* SQUARE 2 STATIC */
 		div.square.sq2{
 				background-color: #FF6014;
 			}
+			/* SQUARE 2 STATIC */
 			div.square.sq2#static {
 				display: none;
-				}
-				div.square.sq2#static:hover{
-					/*transform: translate(108px);
-					transition: 1s;
-					transition-delay: 0.6s;*/
-				}
-				
+			}	
 			/* SQUARE 2 FLIPPING */
 			div.square.sq2#flip-right,
 			div.square.sq2#flip-down,
@@ -160,53 +153,53 @@ h1{
 								animation: flipleft 1s;
 			}
 			
-			/* SQUARE 3 */
-			div.square.sq3{
-				display: none;
-				background-color: #49CC26;
-				}
-				div.square.sq3#float-up{				
-					-webkit-animation: floatup 1s;
-									animation: floatup 1s;
-					-webkit-animation-fill-mode: forwards;
-									animation-fill-mode: forwards;
-				}
-				div.square.sq3#hoverOff{
-					transform : translateZ(10px);
-					box-shadow: 10px 10px 3px #666;
-					transition: 0.5s;
-				}
-				div.square.sq3#hoverOff:hover{
-					-webkit-animation: hoverfloat 0.5s;
-									animation: hoverfloat 0.5s;
-					-webkit-animation-fill-mode: forwards;
-									animation-fill-mode: forwards;
-				}
-			
-			/* SQUARE 4 */
-			div.square.sq4{
-				background-color: #5E287A;
-				transform: translateZ(3px);
-				}
-				div.square.sq4#float-up-3d{
-					-webkit-animation: floatup-3d 2s;
-									animation: floatup-3d 2s;
-					-webkit-animation-fill-mode: forwards;
-									animation-fill-mode: forwards;
-				}		
-			
-			/* SQUARE FAUX SHADOW */
-			div.square.sqshadow{
-				display: none;
-				background-color: #666;
-				transform: translateZ(2px);
-				}
-				div.square.sqshadow#cast-shadow{
-					-webkit-animation: castshadow 2s;
-									animation: castshadow 2s;
-					-webkit-animation-fill-mode: forwards;
-									animation-fill-mode: forwards;
-				}
+		/* SQUARE 3 */
+		div.square.sq3{
+			display: none;
+			background-color: #49CC26;
+			}
+			div.square.sq3#float-up{				
+				-webkit-animation: floatup 1s;
+								animation: floatup 1s;
+				-webkit-animation-fill-mode: forwards;
+								animation-fill-mode: forwards;
+			}
+			div.square.sq3#hoverOff{
+				transform : translateZ(10px);
+				box-shadow: 10px 10px 3px #666;
+				transition: 0.5s;
+			}
+			div.square.sq3#hoverOff:hover{
+				-webkit-animation: hoverfloat 0.5s;
+								animation: hoverfloat 0.5s;
+				-webkit-animation-fill-mode: forwards;
+								animation-fill-mode: forwards;
+			}
+		
+		/* SQUARE 4 */
+		div.square.sq4{
+			background-color: #5E287A;
+			transform: translateZ(3px);
+			}
+			div.square.sq4#float-up-3d{
+				-webkit-animation: floatup-3d 2s;
+								animation: floatup-3d 2s;
+				-webkit-animation-fill-mode: forwards;
+								animation-fill-mode: forwards;
+			}		
+		
+		/* SQUARE FAUX SHADOW */
+		div.square.sqshadow{
+			display: none;
+			background-color: #666;
+			transform: translateZ(2px);
+			}
+			div.square.sqshadow#cast-shadow{
+				-webkit-animation: castshadow 2s;
+								animation: castshadow 2s;
+				-webkit-animation-fill-mode: forwards;
+								animation-fill-mode: forwards;
+			}
 				
 	/** 2.3 RECTANGLE FOR DNA **/
 	div.dna {
