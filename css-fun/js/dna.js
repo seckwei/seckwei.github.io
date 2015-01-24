@@ -26,7 +26,7 @@ var dna = {
 		
 		var base_rightHTML = "";
 		for(var i = 0; i < base_right.length; i++){
-			base_rightHTML += "<div class='dna-base right' id='"+ base_right[i] +"'></div>\r\n";
+			base_rightHTML += "<div class='dna-base right' id='"+ base_right[i] +"'>" + base_right[i].toUpperCase() + "</div>\r\n";
 		}
 		
 		$(".dna-base-wrapper.right").append(base_rightHTML);

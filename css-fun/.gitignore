@@ -1,2 +1,5 @@
 # Stylus #
 *.styl
+
+# Prepros #
+*.cfg
