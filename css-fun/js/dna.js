@@ -6,22 +6,23 @@
 
 var dna = {
 	
+	count : 0,
+	height: 0,
+
 	/* Print right side bases */
 	print_opposite: function(){	
 		
 		var base_right = new Array(); // Contains the right bases in sequence
 		
-		var count = 0; // Count of left bases
-		
 		// Assigning right bases according to left's
 		$(".dna-base.left").each(function(){
 			switch($(this).attr("id")){
-				case "a" : base_right[count] = "t"; break;
-				case "g" : base_right[count] = "c"; break;
-				case "t" : base_right[count] = "a"; break;
-				case "c" : base_right[count] = "g"; break;
+				case "a" : base_right[dna.count] = "t"; break;
+				case "g" : base_right[dna.count] = "c"; break;
+				case "t" : base_right[dna.count] = "a"; break;
+				case "c" : base_right[dna.count] = "g"; break;
 			}
-			count++;			
+			dna.count++;			
 		});
 		
 		var base_rightHTML = "";
@@ -31,9 +32,16 @@ var dna = {
 		
 		$(".dna-base-wrapper.right").append(base_rightHTML);
 		
+	},
+
+	/* Set back bone height */
+	extend_backbone: function(){
+		dna.height = dna.count * ($(".dna-base").height() + 5) + 5;
+		$(".dna-backbone").css("height", dna.height+"px");
 	}
 	
 }
 
 dna.print_opposite();
+dna.extend_backbone();
 
