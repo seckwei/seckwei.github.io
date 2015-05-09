@@ -55,9 +55,21 @@ var others = function(){
 
 	// Cube
 	var boxMat = new THREE.MeshLambertMaterial( { color: 0xFF0000 } );
-	var boxGeo = new THREE.BoxGeometry( 1, 1, 1 );
+	var boxGeo = new THREE.BoxGeometry( 30, 30, 30 );
 	box = new THREE.Mesh(boxGeo, boxMat);
-	box.geometry.dynamic = true;
+	
+	box.rotation.x = 0.3;
+	box.rotation.y = -0.3;
+
+	box.Reset = function(){
+		box.scale.x = 1;
+		box.scale.y = 1;
+		box.scale.z = 1;
+
+		box.rotation.x = 0.3;
+		box.rotation.y = -0.3;
+		box.rotation.z = 0;
+	}
 
 	scene.add(box);
 };
