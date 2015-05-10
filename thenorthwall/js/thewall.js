@@ -1,6 +1,6 @@
 var scene, camera, controls, renderer;
 var ground, wall, castle;
-var light;
+var light, lightBall;
 
 var init = function(){
 
@@ -23,7 +23,7 @@ var init = function(){
 		antialias: true,
 	});
 	renderer.setSize(WIDTH, HEIGHT);
-	renderer.setClearColor(0xCDCDCD, 0.5);
+	renderer.setClearColor(0x000000, 0.5); //CDCDCD
 
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -55,8 +55,26 @@ var onWindowResize = function(){
 };
 
 var placeLight = function(){
-	light = new THREE.AmbientLight ( 0xFFFFFF );
+
+	// Directional Light
+	var x = 0;
+	var y = 200;
+	var z = 500;
+
+	light = new THREE.DirectionalLight( 0xFFFFFF );
+	light.position.set( x, y, z );
+
 	scene.add(light);
+
+	// Light ball
+	var lightBallMat = new THREE.MeshBasicMaterial( { color: 0xFFFF } );
+	var lightBallGeo = new THREE.SphereGeometry( 10, 16, 16 );
+	lightBall = new THREE.Mesh(lightBallGeo, lightBallMat);
+	lightBall.position.x = x;
+	lightBall.position.y = y;
+	lightBall.position.z = z;
+
+	scene.add(lightBall);
 };
 
 var placeGround = function(){
@@ -65,10 +83,14 @@ var placeGround = function(){
 		color : 0xFFFFFF,
 		side  : THREE.DoubleSide
 	});
-	var groundGeo = new THREE.Geometry();
+
+	var groundGeo = new THREE.BoxGeometry( 1200, 10, 300 );
+
+
+	/*var groundGeo = new THREE.Geometry();
 	var area = 300;
 
-	/*
+	
 	   -x,-z(3) |    x ,-z (1)
 				|
 				|
@@ -79,7 +101,7 @@ var placeGround = function(){
 				v
 				z
 
-	*/	
+		
 	groundGeo.vertices.push(
 		new THREE.Vector3(  area*2, 0,  area ),
 		new THREE.Vector3(  area*2, 0, -area ),
@@ -90,22 +112,23 @@ var placeGround = function(){
 	groundGeo.faces.push(
 		new THREE.Face3( 0, 1, 2 ),
 		new THREE.Face3( 2, 1, 3 )
-	);
+	);*/
 
 	ground = new THREE.Mesh(groundGeo, groundMat);
 
 	scene.add(ground);
-
 };
 
 var placeWall = function(){
 
+	// Base Wall
 	var width  = 400*2;
 	var height = 224;
 	var depth  = 80;
 
 	var wallMat = new THREE.MeshLambertMaterial({
-		color : 0xFEFEEFF
+		color : 0xFFFFFF,
+		shading : THREE.FlatShading
 	});
 
 	var wallGeo = new THREE.BoxGeometry( width, height, depth );
@@ -114,6 +137,22 @@ var placeWall = function(){
 	wall.position.y = height/2 + 0.1;
 
 	scene.add(wall);
+
+	// Uneven Surfaces
+	var uSurfMat = new THREE.MeshLambertMaterial({
+		color : 0xFFFFFF,
+		shading : THREE.FlatShading
+	});
+
+	var uSurfGeo = new THREE.BoxGeometry( 40, 60, 40 );
+	var uSurf = new THREE.Mesh(uSurfGeo, uSurfMat);
+	uSurf.position.x = 0;
+	uSurf.position.y = 180;
+	uSurf.position.z = 80/3;
+
+	uSurf.rotateY(0.5);
+
+	scene.add(uSurf);
 };
 
 var placeCastle = function(){
