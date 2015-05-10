@@ -1,5 +1,5 @@
 var scene, camera, controls, renderer;
-var box, pointLight;
+var box, pointLight, lightBall;
 
 var init = function(){
 	// SCENE
@@ -45,12 +45,25 @@ var init = function(){
 };
 
 var others = function(){
+
 	// Lighting
 	pointLight = new THREE.PointLight( 0xFFFFFF );
 	pointLight.position.x = 10;
 	pointLight.position.y = 50;
 	pointLight.position.z = 100;
 	scene.add(pointLight);
+
+	// Light ball
+	var lightBallMat = new THREE.MeshBasicMaterial( { color: 0xFFFF00 } );
+	var lightBallGeo = new THREE.SphereGeometry( 5, 16, 16 );
+	lightBall = new THREE.Mesh(lightBallGeo, lightBallMat);
+	lightBall.position.x = 10;
+	lightBall.position.y = 50;
+	lightBall.position.z = 100;
+
+	scene.add(lightBall);
+
+
 
 	// Ground
 	var groundMesh = new THREE.MeshBasicMaterial( { color: 0xC3A687, side: THREE.DoubleSide } );
@@ -70,14 +83,6 @@ var others = function(){
 	ground.position.y = -0.5;
 
 	scene.add(ground);
-
-
-	// Sphere
-	var sphereMat = new THREE.MeshLambertMaterial( { color: 0x0000FF } );
-	var sphereGeo = new THREE.SphereGeometry( 50, 32, 16 );
-	var sphere = new THREE.Mesh(sphereGeo, sphereMat);
-	//scene.add(sphere);
-
 
 	// Box
 	var boxMat = new THREE.MeshLambertMaterial( { color: 0xFF0000 } );

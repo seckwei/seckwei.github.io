@@ -1,6 +1,10 @@
 var gui
 
 window.onload = function(){
+
+	/* 
+		BOX CONTROLS 
+	*/
 	gui = new dat.GUI();
 
 	gui.add(box, "reset").name('Reset');
@@ -29,4 +33,24 @@ window.onload = function(){
 	f3.add(box.position, "x", -50, 50).listen();
 	f3.add(box.position, "y", -50, 50).listen();
 	f3.add(box.position, "z", -50, 50).listen();
+
+	/* 
+		POINT LIGHT CONTROLS 
+	*/
+	gui = new dat.GUI();
+
+	// LOCATION
+	var f1 = gui.addFolder('Location');
+	f1.open();
+
+
+	f1.add(pointLight.position, "x", -500, 500).step(1).listen().onChange(function(pos){
+		lightBall.position.x = pos;
+	});
+	f1.add(pointLight.position, "y", -500, 500).step(1).listen().onChange(function(pos){
+		lightBall.position.y = pos;
+	});
+	f1.add(pointLight.position, "z", -500, 500).step(1).listen().onChange(function(pos){
+		lightBall.position.z = pos;
+	});
 };
