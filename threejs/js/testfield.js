@@ -1,5 +1,5 @@
 var scene, camera, controls, renderer;
-var box;
+var box, pointLight;
 
 var init = function(){
 	// SCENE
@@ -46,7 +46,7 @@ var init = function(){
 
 var others = function(){
 	// Lighting
-	var pointLight = new THREE.PointLight( 0xFFFFFF );
+	pointLight = new THREE.PointLight( 0xFFFFFF );
 	pointLight.position.x = 10;
 	pointLight.position.y = 50;
 	pointLight.position.z = 100;
