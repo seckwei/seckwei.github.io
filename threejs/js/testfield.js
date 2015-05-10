@@ -10,7 +10,7 @@ var init = function(){
 	var VIEW_ANGLE = 45;
 	var ASPECT = WIDTH / HEIGHT;
 	var NEAR = 0.1;
-	var FAR = 1000;
+	var FAR = 10000;
 
 	// Get DOM Element
 	var $container = $('#container');
@@ -18,8 +18,10 @@ var init = function(){
 	// RENDERER
 	renderer = new THREE.WebGLRenderer({
 		alpha: true,
-		antialias: true
+		antialias: true,
 	});
+	renderer.setSize(WIDTH, HEIGHT);
+	renderer.setClearColor(0x000000, 0.8);
 
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -36,9 +38,6 @@ var init = function(){
 	// SCENE
 	scene = new THREE.Scene();
 	scene.add(camera);
-
-	// START Renderer
-	renderer.setSize(WIDTH, HEIGHT);
 
 	// Attach Renderer
 	$container.append(renderer.domElement);
@@ -64,16 +63,22 @@ var others = function(){
 	scene.add(lightBall);
 
 
-
 	// Ground
-	var groundMesh = new THREE.MeshBasicMaterial( { color: 0xC3A687, side: THREE.DoubleSide } );
+	var groundMesh = new THREE.MeshBasicMaterial({ 
+		color : 0xC3A687, 
+		side  : THREE.DoubleSide,
+		transparent : true,
+		opacity : 0.5
+	});
 	var groundGeo = new THREE.Geometry();
 
+	var size = 300;
+
 	groundGeo.vertices.push(
-		new THREE.Vector3(  50, 0,  50),
-		new THREE.Vector3(  50, 0, -50),
-		new THREE.Vector3( -50, 0,  50),
-		new THREE.Vector3( -50, 0, -50)
+		new THREE.Vector3(  size, 0,  size),
+		new THREE.Vector3(  size, 0, -size),
+		new THREE.Vector3( -size, 0,  size),
+		new THREE.Vector3( -size, 0, -size)
 	);
 
 	groundGeo.faces.push( new THREE.Face3( 0, 1, 2 ) );
@@ -101,6 +106,8 @@ var others = function(){
 		box.position.x = 30/2;
 		box.position.y = 30/2;
 		box.position.z = 30/2;
+
+		box.material.color = new THREE.Color("#FF0000");
 	}
 	box.reset();
 
