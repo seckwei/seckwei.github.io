@@ -31,8 +31,6 @@ var init = function(){
 	camera.position.x = 80;
 	camera.position.y = 80;
 	camera.position.z = 1000;
-
-	camera.lookAt(new THREE.Vector3(0,0,0));
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -58,7 +56,7 @@ var placeLight = function(){
 
 	// Directional Light
 	var x = 300;
-	var y = 200;
+	var y = 500;
 	var z = 500;
 
 	light = new THREE.DirectionalLight( 0xFFFFFF, 1 );
@@ -79,7 +77,7 @@ var placeLight = function(){
 	// Directional Light 2
 	x = -300;
 	y = 200;
-	z = 1000;
+	z = -1000;
 
 	light = new THREE.DirectionalLight( 0xFFFFFF, 0.5 );
 	light.position.set( x, y, z );
@@ -167,44 +165,18 @@ var placeWall = function(){
 	scene.add(wall);
 
 	/*
-		Small Nose
-	*/
-	var noseMat = new THREE.MeshLambertMaterial({
-		color: 0xFFFFFF,
-		shading : THREE.FlatShading
-	});
-
-	var height = 30;
-	var width  = 10/2;
-	var depth  = 10/2;
-
-	var noseGeo = noseGeometry(width, height, depth);
-
-	var noses = [];
-
-	for(var pos = -(wallConfig.width/2) + width; pos < (wallConfig.width/2); pos += width*2){
-		
-		nose = new THREE.Mesh(noseGeo, noseMat);
-		nose.position.y = (Math.random()*(224-height-height/2)) + height/2;
-		nose.position.z = wallConfig.depth/2;
-		nose.position.x = pos;
-
-		noses.push(nose);
-	}
-
-	for(var i = 0; i < noses.length; i++){
-		scene.add(noses[i])
-	}
-
-
-	/*
 		Big Nose
 	*/
 	height = 100;
 	width  = 100/2;
 	depth  = 50/2;
 
-	noseGeo = noseGeometry(width, height, depth);
+	var noseMat = new THREE.MeshLambertMaterial({
+		color: 0xFFFFFF,
+		shading : THREE.FlatShading
+	});
+
+	var noseGeo = noseGeometry(width, height, depth);
 	nose = new THREE.Mesh(noseGeo, noseMat);
 	nose.position.y = 224 - height;
 	nose.position.z = wallConfig.depth/2;
@@ -212,6 +184,47 @@ var placeWall = function(){
 
 	scene.add(nose);
 
+
+	/*
+		Wall Terrain
+	*/
+	var wallPlaneMat = new THREE.MeshLambertMaterial({ 
+		color: 0xFFFFFF, 
+		shading: THREE.FlatShading,
+		side: THREE.DoubleSide,
+		wireframe: false
+	});
+
+	var wallPlaneConfig = {
+		wSegment : 120,
+		hSegment : 10
+	};
+
+	var wallPlaneGeo = new THREE.PlaneGeometry(
+		wallConfig.width, wallConfig.height, 
+		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
+	);
+
+	//var even_hSegment = 0;
+	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
+
+		/*var current_hSegment = Math.floor(i / (wallPlaneConfig.wSegment+1));
+		even_hSegment = (current_hSegment % 3 == 0)? current_hSegment : even_hSegment;
+
+		wallPlaneGeo.vertices[i].z = (Math.random() * 3 + 1) + even_hSegment*2;*/
+
+		wallPlaneGeo.vertices[i].z = wallPlaneZ[i];
+	};
+
+	wallPlaneGeo.computeFaceNormals();
+	wallPlaneGeo.computeVertexNormals();
+
+	var wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
+
+	wallPlane.position.y = wallConfig.height/2;
+	wallPlane.position.z = wallConfig.depth/2;
+
+	scene.add(wallPlane);
 };
 
 var placeCastle = function(){
@@ -228,7 +241,7 @@ var placeCastle = function(){
 
 	castle = new THREE.Mesh(castleGeo, castleMat);
 	castle.position.y = height/2 + 0.1;
-	castle.position.z = 80/2 + depth/2;
+	castle.position.z = 70;
 
 	scene.add(castle);
 };
@@ -240,11 +253,19 @@ var noseGeometry = function(width, height, depth, angle){
 
 	var noseGeo = new THREE.Geometry();
 	
+	/*
+	   (3) (2) (1)
+		\   |   /
+		 \  |  /
+		  \ | /
+		   \|/ (0)
+	*/
+
 	noseGeo.vertices.push(
-		new THREE.Vector3(  	0,		 0,     0),
-		new THREE.Vector3( 	width,	height,	    0), 
-		new THREE.Vector3(  	0,  height, depth),
-		new THREE.Vector3( -width,  height,     0)
+		new THREE.Vector3(  	0,		 0,     0), // 0
+		new THREE.Vector3( 	width,	height,	    0), // 1
+		new THREE.Vector3(  	0,  height, depth), // 2 (Nose Tip)
+		new THREE.Vector3( -width,  height,     0)  // 3
 	);
 
 	noseGeo.faces.push(
