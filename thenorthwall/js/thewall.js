@@ -10,9 +10,9 @@ var longBeam, zBeam;
 var wallBlock;
 
 var wallConfig = {
-	width  : 400*2,
-	height : 220,
-	depth  : 50
+	width  : 400*2*10,
+	height : 220*10,
+	depth  : 50*10
 }
 
 /* Beam Material */
@@ -38,7 +38,7 @@ var init = function(){
 	var VIEW_ANGLE = 45;
 	var ASPECT = WIDTH / HEIGHT;
 	var NEAR = 0.1;
-	var FAR = 10000;
+	var FAR = 50000;
 
 	// Get DOM Element
 	var $container = $('#container');
@@ -55,8 +55,8 @@ var init = function(){
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
 	camera.position.x = 80;
-	camera.position.y = 80;
-	camera.position.z = 1000;
+	camera.position.y = 800;
+	camera.position.z = 10000;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -128,7 +128,7 @@ var placeGround = function(){
 		side  : THREE.DoubleSide
 	});
 
-	var groundGeo = new THREE.BoxGeometry( 1200, 10, 300 );
+	var groundGeo = new THREE.BoxGeometry( 12000, 10, 3000 );
 
 
 	/*var groundGeo = new THREE.Geometry();
@@ -182,49 +182,48 @@ var placeWall = function(){
 		z = wallGeo.vertices[i].z;
 
 		if(z > 0){
-			if(y <= 110 && y >= 88){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1);
+			if(y <= 1100 && y >= 880){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10);
 			}
-			else if(y == 66){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+2*1.3;
+			else if(y == 660){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+20*1.3;
 			}
-			else if(y <= 44 && y >= 0){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+5;
+			else if(y <= 440 && y >= 0){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+50;
 			}
-			else if(y <= -22 && y >= -66 ){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+8*1.5;
+			else if(y <= -220 && y >= -660 ){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+80*1.5;
 			}
-			else if(y == -88){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+11*1.5;
+			else if(y == -880){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+110*1.5;
 			}
-			else if(y == -110){
-				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+13*1.5;
+			else if(y == -1100){
+				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+130*1.5;
 			}
 		}
 
 		if(z < 0){
-			if(y <= 110 && y >= 88){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1);
+			if(y <= 1100 && y >= 880){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10);
 			}
-			else if(y == 66){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+2*1.3;
+			else if(y == 660){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+20*1.3;
 			}
-			else if(y <= 44 && y >= 0){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+5;
+			else if(y <= 440 && y >= 0){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+50;
 			}
-			else if(y <= -22 && y >= -66 ){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+8*1.5;
+			else if(y <= -220 && y >= -660 ){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+80*1.5;
 			}
-			else if(y == -88){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+11*1.5;
+			else if(y == -880){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+110*1.5;
 			}
-			else if(y == -110){
-				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+13*1.5;
+			else if(y == -1100){
+				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+130*1.5;
 			}
 		}
 	}*/
-	wallGeo.vertices = wallVertexZ;
-
+	wallGeo.vertices = wallVertexZ10;
 
 	wallGeo.computeFaceNormals();
 	wallGeo.computeVertexNormals();
@@ -233,94 +232,6 @@ var placeWall = function(){
 	wall.position.y = wallConfig.height/2 + 0.1;
 
 	scene.add(wall);
-
-
-	/*
-		Big Nose
-	*/
-	/*var height = 100;
-	var width  = 100/2;
-	var depth  = 50/2;
-
-	var noseMat = new THREE.MeshLambertMaterial({
-		color: 0xFFFFFF,
-		shading : THREE.FlatShading
-	});
-
-	var noseGeo = noseGeometry(width, height, depth);
-	nose = new THREE.Mesh(noseGeo, noseMat);
-	nose.position.y = wallConfig.height - height;
-	nose.position.z = wallConfig.depth/2;
-	nose.position.x = -(wallConfig.width/2) + width;
-
-	scene.add(nose);*/
-
-
-	/*
-		Front Wall Terrain
-	*/
-	/*var wallPlaneMat = new THREE.MeshLambertMaterial({ 
-		color: 0xFFFFFF, 
-		shading: THREE.FlatShading,
-		side: THREE.DoubleSide,
-		wireframe: false
-	});
-
-	var wallPlaneConfig = {
-		wSegment : 120,
-		hSegment : 10
-	};
-
-	wallPlaneGeo = new THREE.PlaneGeometry(
-		wallConfig.width, wallConfig.height, 
-		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
-	);
-
-	var even_hSegment = 0;
-	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
-
-		var current_hSegment = Math.floor(i / (wallPlaneConfig.wSegment+1));
-		even_hSegment = (current_hSegment % 3 == 0)? current_hSegment : even_hSegment;
-
-		wallPlaneGeo.vertices[i].z = (Math.random() * 3 + 1) + even_hSegment*1.3;
-		wallPlaneZ.push(wallPlaneGeo.vertices[i].z);
-
-		wallPlaneGeo.vertices[i].z = wallPlaneZ[i];
-	};
-
-	wallPlaneGeo.computeFaceNormals();
-	wallPlaneGeo.computeVertexNormals();
-
-	wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
-
-	wallPlane.position.y = wallConfig.height/2;
-	wallPlane.position.z = wallConfig.depth/2;
-
-	scene.add(wallPlane);*/
-
-	/*
-		Back Wall Terrain
-	*/
-	/*wallPlaneGeo = new THREE.PlaneGeometry(
-		wallConfig.width, wallConfig.height,
-		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
-	);
-
-	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
-		wallPlaneGeo.vertices[i].z = wallPlaneZ2[i];
-	};
-
-	wallPlaneGeo.computeFaceNormals();
-	wallPlaneGeo.computeVertexNormals();
-
-	wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
-
-	wallPlane.position.y = wallConfig.height/2;
-	wallPlane.position.z = -wallConfig.depth/2;
-
-	wallPlane.rotation.y = 180 * Math.PI/180;
-
-	scene.add(wallPlane);*/
 };
 
 var placeTopWall = function(){
@@ -328,13 +239,13 @@ var placeTopWall = function(){
 		Top of Wall
 	*/
 	var wallBlockConfig = {
-		width  : 30.5,
-		height : 5,
-		depth  : 20
+		width  : 305,
+		height : 50,
+		depth  : 200
 	}
 	
 	/* Generating the wall blocks for top of wall */
-	for(var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+10){
+	for(var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-100)/2; x+=wallBlockConfig.width+100){
 
 		/* South Facing Wall Block */
 		wallBlockGeo = new THREE.BoxGeometry(
@@ -348,20 +259,20 @@ var placeTopWall = function(){
 		for(var i = 0; i < wallBlockGeo.vertices.length; i++){
 			// Random height points 
 			if(wallBlockGeo.vertices[i].y > 0){
-				wallBlockGeo.vertices[i].y = Math.random();
+				wallBlockGeo.vertices[i].y = Math.random()*5;
 			}
 
 			// Random side bumps
 			if(wallBlockGeo.vertices[i].x >= wallBlockConfig.width/2){
-				wallBlockGeo.vertices[i].x += Math.random();
+				wallBlockGeo.vertices[i].x += Math.random()*10;
 			}
 			else if(wallBlockGeo.vertices[i].x <= -(wallBlockConfig.width/2)){
-				wallBlockGeo.vertices[i].x -= Math.random();
+				wallBlockGeo.vertices[i].x -= Math.random()*10;
 			}
 
 			// Random front facing points
 			if(wallBlockGeo.vertices[i].z > 0){
-				wallBlockGeo.vertices[i].z += Math.random() + 1.5;
+				wallBlockGeo.vertices[i].z += Math.random()*20 + 5;
 			}
 		}
 
@@ -390,21 +301,21 @@ var placeTopWall = function(){
 		for(var i = 0; i < wallBlockGeo.vertices.length; i++){
 			// Random height points  
 			if(wallBlockGeo.vertices[i].y > 0){
-				wallBlockGeo.vertices[i].y = Math.random();
+				wallBlockGeo.vertices[i].y = Math.random()*5;
 			}
 
 			// Random side bumps
 			if(wallBlockGeo.vertices[i].x >= wallBlockConfig.width/2){
-				wallBlockGeo.vertices[i].x += Math.random();
+				wallBlockGeo.vertices[i].x += Math.random()*10;
 			}
 			else if(wallBlockGeo.vertices[i].x <= -(wallBlockConfig.width/2)){
-				wallBlockGeo.vertices[i].x -= Math.random();
+				wallBlockGeo.vertices[i].x -= Math.random()*10;
 			}
 
 			// Random front facing points
 			// (subtract because it is facing away from Z)
 			if(wallBlockGeo.vertices[i].z < 0){
-				wallBlockGeo.vertices[i].z -= Math.random() + 1.5;
+				wallBlockGeo.vertices[i].z -= Math.random()*20 + 5;
 			}
 		}
 
@@ -424,40 +335,40 @@ var placeTopWall = function(){
 	}
 
 	/* X Support Beam */
-	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 1, 1 );
+	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 10, 10 );
 
-	var y = wallConfig.height + wallBlockConfig.height - 2;
-
+	var y = wallConfig.height + wallBlockConfig.height - 25;
+	var z = 50;
 	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
 	xSupBeam.position.y = y;
-	xSupBeam.position.z = 5;
+	xSupBeam.position.z = z;
 
 	scene.add(xSupBeam);
 
 	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
 	xSupBeam.position.y = y;
-	xSupBeam.position.z = -5;
+	xSupBeam.position.z = -z;
 
 	scene.add(xSupBeam);
 
 
 	/* Z Support Beam */
-	var zSupBeamGeo = new THREE.BoxGeometry( 1, 1, wallConfig.depth );
+	var zSupBeamGeo = new THREE.BoxGeometry( 10, 10, wallConfig.depth );
 
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 5); x < wallConfig.width/2; x += wallBlockConfig.width+10) {
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
 		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
-		zSupBeam.position.y = y - 1;
-		zSupBeam.position.x = x - 4;
+		zSupBeam.position.y = y - 5;
+		zSupBeam.position.x = x - 40;
 		scene.add(zSupBeam);
 
 		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
-		zSupBeam.position.y = y - 1;
-		zSupBeam.position.x = x + 4;
+		zSupBeam.position.y = y - 5;
+		zSupBeam.position.x = x + 40;
 		scene.add(zSupBeam);
 	};
 
 	/* Y Support Beam */
-	var ySupBeamGeo = new THREE.BoxGeometry( 1, 4, 1 );
+	var ySupBeamGeo = new THREE.BoxGeometry( 10, 40, 10 );
 
 	var placeYSupBeam = function(x, y, z){
 		var ySupBeam = new THREE.Mesh(ySupBeamGeo, beamMat);
@@ -467,26 +378,26 @@ var placeTopWall = function(){
 		scene.add(ySupBeam);
 	};
 
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+10) {
-		placeYSupBeam(x+5, y-1,  4.8);
-		placeYSupBeam(x+5, y-1, -4.8);
-		placeYSupBeam(x-5, y-1,  4.8);
-		placeYSupBeam(x-5, y-1, -4.8);
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+100) {
+		placeYSupBeam(x+50, y-10,  48);
+		placeYSupBeam(x+50, y-10, -48);
+		placeYSupBeam(x-50, y-10,  48);
+		placeYSupBeam(x-50, y-10, -48);
 	};
 
-	var xOff = 4.5;
-	var zOff1 = 12;
-	var zOff2 = 17;
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 5); x < wallConfig.width/2; x += wallBlockConfig.width+10) {
-		placeYSupBeam(x+xOff, y-1, zOff1);
-		placeYSupBeam(x+xOff, y-1, zOff2);
-		placeYSupBeam(x-xOff, y-1, zOff1);
-		placeYSupBeam(x-xOff, y-1, zOff2);
+	var xOff = 45;
+	var zOff1 = 120;
+	var zOff2 = 170;
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
+		placeYSupBeam(x+xOff, y-10, zOff1);
+		placeYSupBeam(x+xOff, y-10, zOff2);
+		placeYSupBeam(x-xOff, y-10, zOff1);
+		placeYSupBeam(x-xOff, y-10, zOff2);
 
-		placeYSupBeam(x+xOff, y-1, -zOff1);
-		placeYSupBeam(x+xOff, y-1, -zOff2);
-		placeYSupBeam(x-xOff, y-1, -zOff1);
-		placeYSupBeam(x-xOff, y-1, -zOff2);
+		placeYSupBeam(x+xOff, y-10, -zOff1);
+		placeYSupBeam(x+xOff, y-10, -zOff2);
+		placeYSupBeam(x-xOff, y-10, -zOff1);
+		placeYSupBeam(x-xOff, y-10, -zOff2);
 	};
 }
 
@@ -495,9 +406,9 @@ var placeCastle = function(){
 	/*
 		Castle Black
 	*/
-	var width = 40;
-	var height = 10;
-	var depth = 20;
+	var width = 400;
+	var height = 100;
+	var depth = 200;
 
 	var castleMat = new THREE.MeshLambertMaterial({
 		color : 0x000000
@@ -506,21 +417,24 @@ var placeCastle = function(){
 	var castleGeo = new THREE.BoxGeometry( width, height, depth );
 
 	castle = new THREE.Mesh(castleGeo, castleMat);
+	castle.position.x += 50;
 	castle.position.y = height/2;
-	castle.position.z = wallConfig.depth + 8;
+	castle.position.z = wallConfig.depth + 80;
 
 	scene.add(castle);
+};
 
+var placeElevatorBeams = function(){
 	/*
 		Elevator
 	*/
 	var longBeamConfig = {
-		width	: 1,
-		height	: 230,
-		depth	: 4,
-		posX	: 2.5,
-		posY	: 230/2,
-		posZ	: wallConfig.depth/2 + 13,
+		width	: 10,
+		height	: wallConfig.height + 50,
+		depth	: 40,
+		posX	: 25,
+		posY	: wallConfig.height/2 + 50,
+		posZ	: wallConfig.depth/2 + 150,
 		rotX	: -0.092528
 	}
 	var longBeamGeo = new THREE.BoxGeometry(longBeamConfig.width, longBeamConfig.height, longBeamConfig.depth);
@@ -549,18 +463,18 @@ var placeCastle = function(){
 		Z Beams 
 	*/
 	var zBeamConfig = {
-		width	: 1.3,
-		height	: 1.3,
-		depth	: 10,
-		posX	: 3,
-		rotY	: 5 * Math.PI/180
+		width	: 13,
+		height	: 13,
+		depth	: 250,
+		posX	: 40,
+		rotY	: 6 * Math.PI/180
 	};
 	var zBeamGeo = new THREE.BoxGeometry(zBeamConfig.width, zBeamConfig.height, zBeamConfig.depth);
 	
-	for(var y = 20; y < 224; y+=20){
+	for(var y = 200; y < longBeamConfig.height; y+=150){
 
 		// Skewing the Z position according to Long Beam's X Rotation
-		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 12;
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 200;
 
 		/* Left Z Beams */
 		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
@@ -585,16 +499,16 @@ var placeCastle = function(){
 		X Beams
 	*/
 	var xBeamConfig = {
-		width	: longBeamConfig.posX * 2 + 1,
-		height	: 0.5,
-		depth	: 0.5
+		width	: longBeamConfig.posX * 2 + 20,
+		height	: 5,
+		depth	: 5
 	};
 	var xBeamGeo = new THREE.BoxGeometry(xBeamConfig.width, xBeamConfig.height, xBeamConfig.depth);
 
-	for(var y = 19.5; y < 224; y+=20){
+	for(var y = 195; y < longBeamConfig.height; y+=150){
 
 		// Skewing the Z position according to Long Beam's X Rotation
-		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 8;
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 80;
 
 		/* Left Z Beams */
 		xBeam = new THREE.Mesh(xBeamGeo, beamMat);
@@ -603,7 +517,7 @@ var placeCastle = function(){
 
 		scene.add(xBeam);
 	}
-};
+}
 
 /*	Pyramid Geometry Function	*/
 var noseGeometry = function(width, height, depth, angle){
@@ -653,5 +567,6 @@ placeGround();
 placeWall();
 placeTopWall();
 placeCastle();
+placeElevatorBeams();
 
 animate(new Date().getTime());
