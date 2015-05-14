@@ -2,6 +2,33 @@ var scene, camera, controls, renderer;
 var ground, wall, castle, nose;
 var light, lightBall;
 
+var wallGeo;
+
+var wallPlane, wallPlaneGeo, wallBlockGeo;
+var longBeam, zBeam;
+
+var wallBlock;
+//var wallPlaneZ;
+
+var wallConfig = {
+	width  : 400*2,
+	height : 219,
+	depth  : 50
+}
+
+/* Beam Material */
+var beamMat = new THREE.MeshLambertMaterial({
+	color   : 0x645242,
+	shading : THREE.FlatShading
+});
+
+/* Wall Material */
+var wallMat = new THREE.MeshLambertMaterial({
+	color : 0xFFFFFF,
+	shading : THREE.FlatShading,
+	wireframe : false
+});
+
 var init = function(){
 
 	// WINDOW SIZE
@@ -142,18 +169,7 @@ var placeWall = function(){
 	/*
 		Base Wall
 	*/
-	var wallConfig = {
-		width  : 400*2,
-		height : 224,
-		depth  : 80
-	}
-
-	var wallMat = new THREE.MeshLambertMaterial({
-		color : 0xFFFFFF,
-		shading : THREE.FlatShading
-	});
-
-	var wallGeo = new THREE.BoxGeometry( 
+	wallGeo = new THREE.BoxGeometry( 
 		wallConfig.width, 
 		wallConfig.height, 
 		wallConfig.depth 
@@ -164,12 +180,13 @@ var placeWall = function(){
 
 	scene.add(wall);
 
+
 	/*
 		Big Nose
 	*/
-	height = 100;
-	width  = 100/2;
-	depth  = 50/2;
+	var height = 100;
+	var width  = 100/2;
+	var depth  = 50/2;
 
 	var noseMat = new THREE.MeshLambertMaterial({
 		color: 0xFFFFFF,
@@ -178,15 +195,15 @@ var placeWall = function(){
 
 	var noseGeo = noseGeometry(width, height, depth);
 	nose = new THREE.Mesh(noseGeo, noseMat);
-	nose.position.y = 224 - height;
+	nose.position.y = wallConfig.height - height;
 	nose.position.z = wallConfig.depth/2;
 	nose.position.x = -(wallConfig.width/2) + width;
 
-	scene.add(nose);
+	//scene.add(nose);
 
 
 	/*
-		Wall Terrain
+		Front Wall Terrain
 	*/
 	var wallPlaneMat = new THREE.MeshLambertMaterial({ 
 		color: 0xFFFFFF, 
@@ -200,18 +217,19 @@ var placeWall = function(){
 		hSegment : 10
 	};
 
-	var wallPlaneGeo = new THREE.PlaneGeometry(
+	wallPlaneGeo = new THREE.PlaneGeometry(
 		wallConfig.width, wallConfig.height, 
 		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
 	);
 
-	//var even_hSegment = 0;
+	/*var even_hSegment = 0;*/
 	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
 
 		/*var current_hSegment = Math.floor(i / (wallPlaneConfig.wSegment+1));
 		even_hSegment = (current_hSegment % 3 == 0)? current_hSegment : even_hSegment;
 
-		wallPlaneGeo.vertices[i].z = (Math.random() * 3 + 1) + even_hSegment*2;*/
+		wallPlaneGeo.vertices[i].z = (Math.random() * 3 + 1) + even_hSegment*1.3;
+		wallPlaneZ.push(wallPlaneGeo.vertices[i].z);*/
 
 		wallPlaneGeo.vertices[i].z = wallPlaneZ[i];
 	};
@@ -219,16 +237,210 @@ var placeWall = function(){
 	wallPlaneGeo.computeFaceNormals();
 	wallPlaneGeo.computeVertexNormals();
 
-	var wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
+	wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
 
 	wallPlane.position.y = wallConfig.height/2;
 	wallPlane.position.z = wallConfig.depth/2;
 
 	scene.add(wallPlane);
+
+	/*
+		Back Wall Terrain
+	*/
+	wallPlaneGeo = new THREE.PlaneGeometry(
+		wallConfig.width, wallConfig.height,
+		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
+	);
+
+	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
+		wallPlaneGeo.vertices[i].z = wallPlaneZ2[i];
+	};
+
+	wallPlaneGeo.computeFaceNormals();
+	wallPlaneGeo.computeVertexNormals();
+
+	wallPlane = new THREE.Mesh(wallPlaneGeo, wallPlaneMat);
+
+	wallPlane.position.y = wallConfig.height/2;
+	wallPlane.position.z = -wallConfig.depth/2;
+
+	wallPlane.rotation.y = 180 * Math.PI/180;
+
+	scene.add(wallPlane);
 };
+
+var placeTopWall = function(){
+	/*
+		Top of Wall
+	*/
+	var wallBlockConfig = {
+		width  : 30.5,
+		height : 5,
+		depth  : 20
+	}
+	
+	/* Generating the wall blocks for top of wall */
+	for(var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+10){
+
+		/* South Facing Wall Block */
+		wallBlockGeo = new THREE.BoxGeometry(
+			wallBlockConfig.width, 
+			wallBlockConfig.height, 
+			wallBlockConfig.depth,
+			4, 1, 2
+		);
+
+		// Random Generate the surface of the blocks
+		for(var i = 0; i < wallBlockGeo.vertices.length; i++){
+			// Random height points 
+			if(wallBlockGeo.vertices[i].y > 0){
+				wallBlockGeo.vertices[i].y = Math.random();
+			}
+
+			// Random side bumps
+			if(wallBlockGeo.vertices[i].x >= wallBlockConfig.width/2){
+				wallBlockGeo.vertices[i].x += Math.random();
+			}
+			else if(wallBlockGeo.vertices[i].x <= -(wallBlockConfig.width/2)){
+				wallBlockGeo.vertices[i].x -= Math.random();
+			}
+
+			// Random front facing points
+			if(wallBlockGeo.vertices[i].z > 0){
+				wallBlockGeo.vertices[i].z += Math.random() + 1.5;
+			}
+		}
+
+		wallBlockGeo.computeVertexNormals();
+		wallBlockGeo.computeFaceNormals();
+		
+		var y = wallConfig.height + wallBlockConfig.height/2;
+		var z = wallConfig.depth/2 - wallBlockConfig.depth/2;
+
+		wallBlock = new THREE.Mesh(wallBlockGeo, wallMat);
+		
+		wallBlock.position.x = x;
+		wallBlock.position.y = y;
+		wallBlock.position.z = z;
+
+		scene.add(wallBlock);
+
+		/* North Facing Wall Block */
+		wallBlockGeo = new THREE.BoxGeometry(
+			wallBlockConfig.width, 
+			wallBlockConfig.height, 
+			wallBlockConfig.depth,
+			4, 1, 2
+		);
+		// Random Generate the surface of the blocks
+		for(var i = 0; i < wallBlockGeo.vertices.length; i++){
+			// Random height points  
+			if(wallBlockGeo.vertices[i].y > 0){
+				wallBlockGeo.vertices[i].y = Math.random();
+			}
+
+			// Random side bumps
+			if(wallBlockGeo.vertices[i].x >= wallBlockConfig.width/2){
+				wallBlockGeo.vertices[i].x += Math.random();
+			}
+			else if(wallBlockGeo.vertices[i].x <= -(wallBlockConfig.width/2)){
+				wallBlockGeo.vertices[i].x -= Math.random();
+			}
+
+			// Random front facing points
+			// (subtract because it is facing away from Z)
+			if(wallBlockGeo.vertices[i].z < 0){
+				wallBlockGeo.vertices[i].z -= Math.random() + 1.5;
+			}
+		}
+
+		wallBlockGeo.computeVertexNormals();
+		wallBlockGeo.computeFaceNormals();
+		
+		var y = wallConfig.height + wallBlockConfig.height/2;
+		var z = wallConfig.depth/2 - wallBlockConfig.depth/2;
+
+		wallBlock = new THREE.Mesh(wallBlockGeo, wallMat);
+		
+		wallBlock.position.x = x;
+		wallBlock.position.y = y;
+		wallBlock.position.z = -z;
+
+		scene.add(wallBlock);
+	}
+
+	/* X Support Beam */
+	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 1, 1 );
+
+	var y = wallConfig.height + wallBlockConfig.height - 2;
+
+	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
+	xSupBeam.position.y = y;
+	xSupBeam.position.z = 5;
+
+	scene.add(xSupBeam);
+
+	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
+	xSupBeam.position.y = y;
+	xSupBeam.position.z = -5;
+
+	scene.add(xSupBeam);
+
+
+	/* Z Support Beam */
+	var zSupBeamGeo = new THREE.BoxGeometry( 1, 1, wallConfig.depth );
+
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 5); x < wallConfig.width/2; x += wallBlockConfig.width+10) {
+		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
+		zSupBeam.position.y = y - 1;
+		zSupBeam.position.x = x - 4;
+		scene.add(zSupBeam);
+
+		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
+		zSupBeam.position.y = y - 1;
+		zSupBeam.position.x = x + 4;
+		scene.add(zSupBeam);
+	};
+
+	/* Y Support Beam */
+	var ySupBeamGeo = new THREE.BoxGeometry( 1, 4, 1 );
+
+	var placeYSupBeam = function(x, y, z){
+		var ySupBeam = new THREE.Mesh(ySupBeamGeo, beamMat);
+		ySupBeam.position.y = y;
+		ySupBeam.position.x = x;
+		ySupBeam.position.z = z;
+		scene.add(ySupBeam);
+	};
+
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+10) {
+		placeYSupBeam(x+5, y-1,  4.8);
+		placeYSupBeam(x+5, y-1, -4.8);
+		placeYSupBeam(x-5, y-1,  4.8);
+		placeYSupBeam(x-5, y-1, -4.8);
+	};
+
+	var xOff = 4.5;
+	var zOff1 = 12;
+	var zOff2 = 17;
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 5); x < wallConfig.width/2; x += wallBlockConfig.width+10) {
+		placeYSupBeam(x+xOff, y-1, zOff1);
+		placeYSupBeam(x+xOff, y-1, zOff2);
+		placeYSupBeam(x-xOff, y-1, zOff1);
+		placeYSupBeam(x-xOff, y-1, zOff2);
+
+		placeYSupBeam(x+xOff, y-1, -zOff1);
+		placeYSupBeam(x+xOff, y-1, -zOff2);
+		placeYSupBeam(x-xOff, y-1, -zOff1);
+		placeYSupBeam(x-xOff, y-1, -zOff2);
+	};
+}
 
 var placeCastle = function(){
 
+	/*
+		Castle Black
+	*/
 	var width = 40;
 	var height = 10;
 	var depth = 20;
@@ -240,10 +452,101 @@ var placeCastle = function(){
 	var castleGeo = new THREE.BoxGeometry( width, height, depth );
 
 	castle = new THREE.Mesh(castleGeo, castleMat);
-	castle.position.y = height/2 + 0.1;
-	castle.position.z = 70;
+	castle.position.y = height/2;
+	castle.position.z = wallConfig.depth + 8;
 
 	scene.add(castle);
+
+	/*
+		Elevator
+	*/
+	var longBeamConfig = {
+		width	: 1,
+		height	: 230,
+		depth	: 4,
+		posX	: 2.5,
+		posY	: 230/2,
+		posZ	: wallConfig.depth/2 + 13,
+		rotX	: -0.092528
+	}
+	var longBeamGeo = new THREE.BoxGeometry(longBeamConfig.width, longBeamConfig.height, longBeamConfig.depth);
+
+	/* Long Beam Left */
+	longBeam = new THREE.Mesh(longBeamGeo, beamMat);
+
+	longBeam.position.x = -longBeamConfig.posX;
+	longBeam.position.y = longBeamConfig.posY;
+	longBeam.position.z = longBeamConfig.posZ;
+
+	longBeam.rotation.x = longBeamConfig.rotX;
+	scene.add(longBeam);
+
+	/* Long Beam Right */
+	longBeam = new THREE.Mesh(longBeamGeo, beamMat);
+
+	longBeam.position.x = longBeamConfig.posX;
+	longBeam.position.y = longBeamConfig.posY;
+	longBeam.position.z = longBeamConfig.posZ;
+
+	longBeam.rotation.x = longBeamConfig.rotX;
+	scene.add(longBeam);
+
+	/* 
+		Z Beams 
+	*/
+	var zBeamConfig = {
+		width	: 1.7,
+		height	: 1,
+		depth	: 7,
+		posX	: 2.5,
+		posZ	: 57
+	};
+	var zBeamGeo = new THREE.BoxGeometry(zBeamConfig.width, zBeamConfig.height, zBeamConfig.depth);
+	
+	for(var y = 20; y < 224; y+=20){
+
+		// Skewing the Z position according to Long Beam's X Rotation
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 11;
+
+		/* Left Z Beams */
+		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
+		zBeam.position.x = zBeamConfig.posX;
+		zBeam.position.z = z;
+		zBeam.position.y = y;
+
+		scene.add(zBeam);
+
+		/* Right Z Beams */
+		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
+		zBeam.position.x = -zBeamConfig.posX;
+		zBeam.position.z = z;
+		zBeam.position.y = y;
+
+		scene.add(zBeam);
+	}
+
+	/*
+		X Beams
+	*/
+	var xBeamConfig = {
+		width	: longBeamConfig.posX * 2 + 1,
+		height	: 0.5,
+		depth	: 0.5
+	};
+	var xBeamGeo = new THREE.BoxGeometry(xBeamConfig.width, xBeamConfig.height, xBeamConfig.depth);
+
+	for(var y = 19.5; y < 224; y+=20){
+
+		// Skewing the Z position according to Long Beam's X Rotation
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 8;
+
+		/* Left Z Beams */
+		xBeam = new THREE.Mesh(xBeamGeo, beamMat);
+		xBeam.position.z = z;
+		xBeam.position.y = y;
+
+		scene.add(xBeam);
+	}
 };
 
 /*	Pyramid Geometry Function	*/
@@ -292,6 +595,7 @@ init();
 placeLight();
 placeGround();
 placeWall();
+placeTopWall();
 placeCastle();
 
 animate(new Date().getTime());
