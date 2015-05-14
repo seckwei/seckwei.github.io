@@ -1,5 +1,5 @@
 var scene, camera, controls, renderer;
-var ground, wall, castle, nose;
+var ground, wall, castle, elevator;
 var light, lightBall;
 
 var wallGeo;
@@ -9,10 +9,24 @@ var longBeam, zBeam;
 
 var wallBlock;
 
+var groundConfig = {
+	width : 12000,
+	height: 10,
+	depth : 3000
+};
+
 var wallConfig = {
 	width  : 400*2*10,
 	height : 220*10,
 	depth  : 50*10
+}
+
+var elevatorConfig = {
+	width	: 50,
+	height	: 20,
+	depth	: 30,
+	posY	: 10,
+	thickness	: 2
 }
 
 /* Beam Material */
@@ -54,9 +68,9 @@ var init = function(){
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
-	camera.position.x = 80;
-	camera.position.y = 800;
-	camera.position.z = 10000;
+	camera.position.x = 0;
+	camera.position.y = 50;
+	camera.position.z = 600;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -128,7 +142,7 @@ var placeGround = function(){
 		side  : THREE.DoubleSide
 	});
 
-	var groundGeo = new THREE.BoxGeometry( 12000, 10, 3000 );
+	var groundGeo = new THREE.BoxGeometry( groundConfig.width, groundConfig.height, groundConfig.depth );
 
 
 	/*var groundGeo = new THREE.Geometry();
@@ -430,9 +444,9 @@ var placeElevatorBeams = function(){
 	*/
 	var longBeamConfig = {
 		width	: 10,
-		height	: wallConfig.height + 50,
+		height	: wallConfig.height + 100,
 		depth	: 40,
-		posX	: 25,
+		posX	: elevatorConfig.width/2 + 10,
 		posY	: wallConfig.height/2 + 50,
 		posZ	: wallConfig.depth/2 + 150,
 		rotX	: -0.092528
@@ -466,7 +480,7 @@ var placeElevatorBeams = function(){
 		width	: 13,
 		height	: 13,
 		depth	: 250,
-		posX	: 40,
+		posX	: longBeamConfig.posX + 15,
 		rotY	: 6 * Math.PI/180
 	};
 	var zBeamGeo = new THREE.BoxGeometry(zBeamConfig.width, zBeamConfig.height, zBeamConfig.depth);
@@ -519,6 +533,156 @@ var placeElevatorBeams = function(){
 	}
 }
 
+var placeElevator = function(){
+
+	var elevatorMat = beamMat;
+
+	/* 
+		Base 
+	*/
+	var elevatorBaseGeo = new THREE.BoxGeometry(elevatorConfig.width, elevatorConfig.thickness, elevatorConfig.depth);
+
+	var elevatorBase = new THREE.Mesh(elevatorBaseGeo, elevatorMat);
+	elevatorBase.position.x = 0;
+	elevatorBase.position.y = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness/2;
+	elevatorBase.position.z = wallConfig.depth;
+
+	scene.add(elevatorBase);
+
+	/* 
+		Front Wall (ground floor door) 
+	*/
+	var fWallConfig = {
+		width 	: elevatorConfig.width /3,
+		height	: elevatorConfig.height/3
+	}
+
+	fWallConfig.posX = (elevatorConfig.width - fWallConfig.width)/2
+	fWallConfig.posY = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness + fWallConfig.height/2;
+	fWallConfig.posZ = wallConfig.depth + elevatorConfig.depth/2 - elevatorConfig.thickness/2;
+
+
+	var fWallGeo = new THREE.BoxGeometry(fWallConfig.width, fWallConfig.height, elevatorConfig.thickness-1);
+
+	var fWallLeft = new THREE.Mesh(fWallGeo, elevatorMat);
+	fWallLeft.position.x = -fWallConfig.posX;
+	fWallLeft.position.y = fWallConfig.posY;
+	fWallLeft.position.z = fWallConfig.posZ;
+
+	scene.add(fWallLeft);
+
+	var fWallRight = new THREE.Mesh(fWallGeo, elevatorMat);
+	fWallRight.position.x = fWallConfig.posX;
+	fWallRight.position.y = fWallConfig.posY;
+	fWallRight.position.z = fWallConfig.posZ;
+
+	scene.add(fWallRight);
+
+	/* 
+		Back Wall (top floor door) 
+	*/
+	var bWallLeft = new THREE.Mesh(fWallGeo, elevatorMat);
+	bWallLeft.position.x = -fWallConfig.posX;
+	bWallLeft.position.y = fWallConfig.posY;
+	bWallLeft.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
+
+	scene.add(bWallLeft);
+
+	var bWallRight = new THREE.Mesh(fWallGeo, elevatorMat);
+	bWallRight.position.x = fWallConfig.posX;
+	bWallRight.position.y = fWallConfig.posY;
+	bWallRight.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
+
+	scene.add(bWallRight);
+
+	/* 
+		Side Wall (Left) 
+	*/
+	var sWallConfig = {
+		posX	: elevatorConfig.width/2 - elevatorConfig.thickness/2,
+		posY	: fWallConfig.posY,
+		posZ	: wallConfig.depth
+	};
+	var sWallLeftGeo = new THREE.BoxGeometry(elevatorConfig.thickness/2, fWallConfig.height, elevatorConfig.depth - elevatorConfig.thickness);
+
+	var sWallLeft = new THREE.Mesh(sWallLeftGeo, elevatorMat);
+	sWallLeft.position.x = -sWallConfig.posX;
+	sWallLeft.position.y = sWallConfig.posY;
+	sWallLeft.position.z = sWallConfig.posZ;
+
+	scene.add(sWallLeft);
+
+	/*
+		Side Wall (Right) 
+	*/
+	var sWallRight = new THREE.Mesh(sWallLeftGeo, elevatorMat);
+	sWallRight.position.x = sWallConfig.posX;
+	sWallRight.position.y = sWallConfig.posY;
+	sWallRight.position.z = sWallConfig.posZ;
+
+	scene.add(sWallRight);
+
+	/*
+		Y Beams (Front)
+	*/
+	var yBeamConfig = {
+		height	  : elevatorConfig.height,
+		thickness : elevatorConfig.thickness
+	}
+
+	yBeamConfig.posY = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness + yBeamConfig.height/2;
+	yBeamConfig.posZ = fWallConfig.posZ;
+
+	var yBeamGeo = new THREE.BoxGeometry(yBeamConfig.thickness, yBeamConfig.height, yBeamConfig.thickness);
+
+	var yBeam;
+	var xStart = -(elevatorConfig.width/2 - yBeamConfig.thickness/2);
+
+	for (var x = xStart;
+			x < elevatorConfig.width/2;
+			x += (fWallConfig.width - yBeamConfig.thickness/3)
+		) {
+		yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
+		yBeam.position.x = x;
+		yBeam.position.y = yBeamConfig.posY;
+		yBeam.position.z = yBeamConfig.posZ;
+
+		scene.add(yBeam);
+	};
+
+	/*
+		Y Beams (Back)
+	*/
+	for (var x = xStart; 
+			x < elevatorConfig.width/2;
+			x += (fWallConfig.width - yBeamConfig.thickness/3)
+		) {
+		yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
+		yBeam.position.x = x;
+		yBeam.position.y = yBeamConfig.posY;
+		yBeam.position.z = yBeamConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
+
+		scene.add(yBeam);
+	};
+
+	/*
+		Y Beams (Middle, Left & Right)
+	*/
+	yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
+	yBeam.position.x = -(elevatorConfig.width/2 - elevatorConfig.thickness/2);
+	yBeam.position.y = yBeamConfig.posY;
+	yBeam.position.z = yBeamConfig.posZ - (elevatorConfig.depth + elevatorConfig.thickness)/2;
+
+	scene.add(yBeam);
+
+	yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
+	yBeam.position.x = elevatorConfig.width/2 - elevatorConfig.thickness/2;
+	yBeam.position.y = yBeamConfig.posY;
+	yBeam.position.z = yBeamConfig.posZ - (elevatorConfig.depth + elevatorConfig.thickness)/2;
+
+	scene.add(yBeam);
+}
+
 /*	Pyramid Geometry Function	*/
 var noseGeometry = function(width, height, depth, angle){
 
@@ -566,7 +730,8 @@ placeLight();
 placeGround();
 placeWall();
 placeTopWall();
-placeCastle();
+//placeCastle();
 placeElevatorBeams();
+placeElevator();
 
 animate(new Date().getTime());
