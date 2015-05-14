@@ -8,11 +8,10 @@ var wallPlane, wallPlaneGeo, wallBlockGeo;
 var longBeam, zBeam;
 
 var wallBlock;
-//var wallPlaneZ;
 
 var wallConfig = {
 	width  : 400*2,
-	height : 219,
+	height : 220,
 	depth  : 50
 }
 
@@ -172,8 +171,63 @@ var placeWall = function(){
 	wallGeo = new THREE.BoxGeometry( 
 		wallConfig.width, 
 		wallConfig.height, 
-		wallConfig.depth 
+		wallConfig.depth,
+		100, 10
 	);
+
+	/* Uneven Wall Surfaces */
+	/*var y;
+	for(var i = 0; i < wallGeo.vertices.length; i++){
+		y = wallGeo.vertices[i].y;
+		z = wallGeo.vertices[i].z;
+
+		if(z > 0){
+			if(y <= 110 && y >= 88){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1);
+			}
+			else if(y == 66){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+2*1.3;
+			}
+			else if(y <= 44 && y >= 0){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+5;
+			}
+			else if(y <= -22 && y >= -66 ){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+8*1.5;
+			}
+			else if(y == -88){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+11*1.5;
+			}
+			else if(y == -110){
+				wallGeo.vertices[i].z += (Math.random() * 3 + 1)+13*1.5;
+			}
+		}
+
+		if(z < 0){
+			if(y <= 110 && y >= 88){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1);
+			}
+			else if(y == 66){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+2*1.3;
+			}
+			else if(y <= 44 && y >= 0){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+5;
+			}
+			else if(y <= -22 && y >= -66 ){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+8*1.5;
+			}
+			else if(y == -88){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+11*1.5;
+			}
+			else if(y == -110){
+				wallGeo.vertices[i].z -= (Math.random() * 3 + 1)+13*1.5;
+			}
+		}
+	}*/
+	wallGeo.vertices = wallVertexZ;
+
+
+	wallGeo.computeFaceNormals();
+	wallGeo.computeVertexNormals();
 
 	wall = new THREE.Mesh(wallGeo, wallMat);
 	wall.position.y = wallConfig.height/2 + 0.1;
@@ -184,7 +238,7 @@ var placeWall = function(){
 	/*
 		Big Nose
 	*/
-	var height = 100;
+	/*var height = 100;
 	var width  = 100/2;
 	var depth  = 50/2;
 
@@ -199,13 +253,13 @@ var placeWall = function(){
 	nose.position.z = wallConfig.depth/2;
 	nose.position.x = -(wallConfig.width/2) + width;
 
-	//scene.add(nose);
+	scene.add(nose);*/
 
 
 	/*
 		Front Wall Terrain
 	*/
-	var wallPlaneMat = new THREE.MeshLambertMaterial({ 
+	/*var wallPlaneMat = new THREE.MeshLambertMaterial({ 
 		color: 0xFFFFFF, 
 		shading: THREE.FlatShading,
 		side: THREE.DoubleSide,
@@ -222,14 +276,14 @@ var placeWall = function(){
 		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
 	);
 
-	/*var even_hSegment = 0;*/
+	var even_hSegment = 0;
 	for (var i = 0; i < wallPlaneGeo.vertices.length; i++) {
 
-		/*var current_hSegment = Math.floor(i / (wallPlaneConfig.wSegment+1));
+		var current_hSegment = Math.floor(i / (wallPlaneConfig.wSegment+1));
 		even_hSegment = (current_hSegment % 3 == 0)? current_hSegment : even_hSegment;
 
 		wallPlaneGeo.vertices[i].z = (Math.random() * 3 + 1) + even_hSegment*1.3;
-		wallPlaneZ.push(wallPlaneGeo.vertices[i].z);*/
+		wallPlaneZ.push(wallPlaneGeo.vertices[i].z);
 
 		wallPlaneGeo.vertices[i].z = wallPlaneZ[i];
 	};
@@ -242,12 +296,12 @@ var placeWall = function(){
 	wallPlane.position.y = wallConfig.height/2;
 	wallPlane.position.z = wallConfig.depth/2;
 
-	scene.add(wallPlane);
+	scene.add(wallPlane);*/
 
 	/*
 		Back Wall Terrain
 	*/
-	wallPlaneGeo = new THREE.PlaneGeometry(
+	/*wallPlaneGeo = new THREE.PlaneGeometry(
 		wallConfig.width, wallConfig.height,
 		wallPlaneConfig.wSegment, wallPlaneConfig.hSegment
 	);
@@ -266,7 +320,7 @@ var placeWall = function(){
 
 	wallPlane.rotation.y = 180 * Math.PI/180;
 
-	scene.add(wallPlane);
+	scene.add(wallPlane);*/
 };
 
 var placeTopWall = function(){
@@ -495,24 +549,25 @@ var placeCastle = function(){
 		Z Beams 
 	*/
 	var zBeamConfig = {
-		width	: 1.7,
-		height	: 1,
-		depth	: 7,
-		posX	: 2.5,
-		posZ	: 57
+		width	: 1.3,
+		height	: 1.3,
+		depth	: 10,
+		posX	: 3,
+		rotY	: 5 * Math.PI/180
 	};
 	var zBeamGeo = new THREE.BoxGeometry(zBeamConfig.width, zBeamConfig.height, zBeamConfig.depth);
 	
 	for(var y = 20; y < 224; y+=20){
 
 		// Skewing the Z position according to Long Beam's X Rotation
-		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 11;
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 12;
 
 		/* Left Z Beams */
 		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
 		zBeam.position.x = zBeamConfig.posX;
 		zBeam.position.z = z;
 		zBeam.position.y = y;
+		zBeam.rotation.y = -zBeamConfig.rotY;
 
 		scene.add(zBeam);
 
@@ -521,6 +576,7 @@ var placeCastle = function(){
 		zBeam.position.x = -zBeamConfig.posX;
 		zBeam.position.z = z;
 		zBeam.position.y = y;
+		zBeam.rotation.y = zBeamConfig.rotY;
 
 		scene.add(zBeam);
 	}

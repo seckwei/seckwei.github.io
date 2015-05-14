@@ -33,11 +33,11 @@ window.onload = function(){
 	fR.add(zBeam.rotation, 'z', -3.14, 3.14).listen();
 	*/
 
-	var fColour = gui.addFolder('Colour');
+	/*var fColour = gui.addFolder('Colour');
 
 	var temp = { color : "#311802" };
 
 	fColour.addColor(temp, "color").listen().onChange(function(value){
 		longBeam.material.color = new THREE.Color(value);
-	});
+	});*/
 }
