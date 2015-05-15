@@ -25,7 +25,8 @@ var elevatorConfig = {
 	width	: 50,
 	height	: 20,
 	depth	: 30,
-	posY	: 10,
+	posY	: groundConfig.height/2 + 10,
+	posZ	: wallConfig.depth,
 	thickness	: 2
 }
 
@@ -37,7 +38,7 @@ var beamMat = new THREE.MeshLambertMaterial({
 
 /* Grill Material */
 var grillMat = new THREE.MeshLambertMaterial({
-	color   : 0x222135,
+	color   : 0x323839,
 	shading : THREE.FlatShading
 });
 
@@ -75,8 +76,8 @@ var init = function(){
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
 	camera.position.x = 0;
-	camera.position.y = 30;
-	camera.position.z = 600;
+	camera.position.y = 50;
+	camera.position.z = 10000;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -546,12 +547,15 @@ var placeElevator = function(){
 	/* 
 		Base 
 	*/
+	var elevatorBaseConfig = {
+		posY : groundConfig.height/2 + elevatorConfig.posY
+	}
 	var elevatorBaseGeo = new THREE.BoxGeometry(elevatorConfig.width, elevatorConfig.thickness, elevatorConfig.depth);
 
 	var elevatorBase = new THREE.Mesh(elevatorBaseGeo, elevatorMat);
 	elevatorBase.position.x = 0;
-	elevatorBase.position.y = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness/2;
-	elevatorBase.position.z = wallConfig.depth;
+	elevatorBase.position.y = elevatorConfig.posY + elevatorConfig.thickness/2;
+	elevatorBase.position.z = elevatorConfig.posZ;
 
 	scene.add(elevatorBase);
 
@@ -562,132 +566,96 @@ var placeElevator = function(){
 		width 	: elevatorConfig.width /3,
 		height	: elevatorConfig.height/3
 	}
-
 	fWallConfig.posX = (elevatorConfig.width - fWallConfig.width)/2
-	fWallConfig.posY = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness + fWallConfig.height/2;
-	fWallConfig.posZ = wallConfig.depth + elevatorConfig.depth/2 - elevatorConfig.thickness/2;
+	fWallConfig.posY = elevatorBase.position.y + fWallConfig.height/2;
+	fWallConfig.posZ = elevatorConfig.posZ + elevatorConfig.depth/2 - elevatorConfig.thickness/2;
 
 
 	var fWallGeo = new THREE.BoxGeometry(fWallConfig.width, fWallConfig.height, elevatorConfig.thickness-1);
 
-	var fWallLeft = new THREE.Mesh(fWallGeo, elevatorMat);
-	fWallLeft.position.x = -fWallConfig.posX;
-	fWallLeft.position.y = fWallConfig.posY;
-	fWallLeft.position.z = fWallConfig.posZ;
-
-	scene.add(fWallLeft);
-
-	var fWallRight = new THREE.Mesh(fWallGeo, elevatorMat);
-	fWallRight.position.x = fWallConfig.posX;
-	fWallRight.position.y = fWallConfig.posY;
-	fWallRight.position.z = fWallConfig.posZ;
-
-	scene.add(fWallRight);
-
-	/* Front Wall Handles */
+	/* 
+		Front Wall Handles 
+	*/
 	var fwhConfig = Object.create(fWallConfig);
+
 	fwhConfig.height = elevatorConfig.thickness;
 	fwhConfig.depth  = elevatorConfig.thickness;
 	fwhConfig.posY  += (fWallConfig.height/2);
 
 	var fwhGeo = new THREE.BoxGeometry(fwhConfig.width, fwhConfig.height, fwhConfig.depth);
 
-	var fwh = new THREE.Mesh(fwhGeo, elevatorMat);
-	fwh.position.x = fwhConfig.posX;
-	fwh.position.y = fwhConfig.posY;
-	fwh.position.z = fwhConfig.posZ;
+	/* Adding Front Wall Objects */
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? 1 : -1;
+		
+		var fWall = new THREE.Mesh(fWallGeo, elevatorMat);
+		fWall.position.x = fWallConfig.posX * mult;
+		fWall.position.y = fWallConfig.posY;
+		fWall.position.z = fWallConfig.posZ;
 
-	scene.add(fwh);
+		scene.add(fWall);
 
-	var fwh = new THREE.Mesh(fwhGeo, elevatorMat);
-	fwh.position.x = -fwhConfig.posX;
-	fwh.position.y = fwhConfig.posY;
-	fwh.position.z = fwhConfig.posZ;
+		var fwh = new THREE.Mesh(fwhGeo, elevatorMat);
+		fwh.position.x = fwhConfig.posX * mult;
+		fwh.position.y = fwhConfig.posY;
+		fwh.position.z = fwhConfig.posZ;
 
-	scene.add(fwh);
+		scene.add(fwh);
+	};
 
-	/* 
-		Back Wall (top floor door) 
-	*/
-	var bWallLeft = new THREE.Mesh(fWallGeo, elevatorMat);
-	bWallLeft.position.x = -fWallConfig.posX;
-	bWallLeft.position.y = fWallConfig.posY;
-	bWallLeft.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
+	/* Adding Back Wall Objects */
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? 1 : -1;
+		
+		var bWall = new THREE.Mesh(fWallGeo, elevatorMat);
+		bWall.position.x = fWallConfig.posX * mult;
+		bWall.position.y = fWallConfig.posY;
+		bWall.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
 
-	scene.add(bWallLeft);
+		scene.add(bWall);
 
-	var bWallRight = new THREE.Mesh(fWallGeo, elevatorMat);
-	bWallRight.position.x = fWallConfig.posX;
-	bWallRight.position.y = fWallConfig.posY;
-	bWallRight.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
+		var bwh = new THREE.Mesh(fwhGeo, elevatorMat);
+		bwh.position.x = fwhConfig.posX * mult;
+		bwh.position.y = fwhConfig.posY;
+		bwh.position.z = fwhConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
 
-	scene.add(bWallRight);
-
-	/* Back Wall Handles */
-	var bwhConfig = Object.create(fwhConfig);
-	bwhConfig.posZ = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
-
-	var bwhGeo = new THREE.BoxGeometry(bwhConfig.width, bwhConfig.height, bwhConfig.depth);
-
-	var bwh = new THREE.Mesh(fwhGeo, elevatorMat);
-	bwh.position.x = bwhConfig.posX;
-	bwh.position.y = bwhConfig.posY;
-	bwh.position.z = bwhConfig.posZ;
-
-	scene.add(bwh);
-
-	var bwh = new THREE.Mesh(fwhGeo, elevatorMat);
-	bwh.position.x = -bwhConfig.posX;
-	bwh.position.y = bwhConfig.posY;
-	bwh.position.z = bwhConfig.posZ;
-
-	scene.add(bwh);
+		scene.add(bwh);
+	};
 
 	/* 
-		Side Wall (Left) 
+		Side Wall
 	*/
 	var sWallConfig = {
 		posX	: elevatorConfig.width/2 - elevatorConfig.thickness/2,
 		posY	: fWallConfig.posY,
-		posZ	: wallConfig.depth
+		posZ	: elevatorConfig.posZ
 	};
+
 	var sWallLeftGeo = new THREE.BoxGeometry(elevatorConfig.thickness/2, fWallConfig.height, elevatorConfig.depth - elevatorConfig.thickness);
 
-	var sWallLeft = new THREE.Mesh(sWallLeftGeo, elevatorMat);
-	sWallLeft.position.x = -sWallConfig.posX;
-	sWallLeft.position.y = sWallConfig.posY;
-	sWallLeft.position.z = sWallConfig.posZ;
-
-	scene.add(sWallLeft);
-
 	/*
-		Side Wall (Right) 
+		Side Wall Handles
 	*/
-	var sWallRight = new THREE.Mesh(sWallLeftGeo, elevatorMat);
-	sWallRight.position.x = sWallConfig.posX;
-	sWallRight.position.y = sWallConfig.posY;
-	sWallRight.position.z = sWallConfig.posZ;
-
-	scene.add(sWallRight);
-
-
-	/* Side Wall Handles (Left) */
 	var swhGeo = new THREE.BoxGeometry(elevatorConfig.thickness, elevatorConfig.thickness, elevatorConfig.depth - elevatorConfig.thickness);
 
-	var swh = new THREE.Mesh(swhGeo, elevatorMat);
-	swh.position.x = -sWallConfig.posX;
-	swh.position.y = fwhConfig.posY;
-	swh.position.z = sWallConfig.posZ;
+	/* Adding Side Wall Objects */
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? 1 : -1;
 
-	scene.add(swh);
+		var sWallLeft = new THREE.Mesh(sWallLeftGeo, elevatorMat);
+		sWallLeft.position.x = sWallConfig.posX * mult;
+		sWallLeft.position.y = sWallConfig.posY;
+		sWallLeft.position.z = sWallConfig.posZ;
 
-	/* Side Wall Handles (Right) */
-	var swh = new THREE.Mesh(swhGeo, elevatorMat);
-	swh.position.x = sWallConfig.posX;
-	swh.position.y = fwhConfig.posY;
-	swh.position.z = sWallConfig.posZ;
+		scene.add(sWallLeft);
 
-	scene.add(swh);
+		var swh = new THREE.Mesh(swhGeo, elevatorMat);
+		swh.position.x = sWallConfig.posX * mult;
+		swh.position.y = fwhConfig.posY;
+		swh.position.z = sWallConfig.posZ;
+
+		scene.add(swh);
+	}
 
 
 	/*
@@ -699,7 +667,7 @@ var placeElevator = function(){
 	}
 
 	yBeamConfig.posX = -(elevatorConfig.width/2 - yBeamConfig.thickness/2);
-	yBeamConfig.posY = groundConfig.height/2 + elevatorConfig.posY + elevatorConfig.thickness + yBeamConfig.height/2;
+	yBeamConfig.posY = elevatorBase.position.y + yBeamConfig.height/2;
 	yBeamConfig.posZ = fWallConfig.posZ;
 
 	var yBeamGeo = new THREE.BoxGeometry(yBeamConfig.thickness, yBeamConfig.height, yBeamConfig.thickness);
@@ -735,19 +703,16 @@ var placeElevator = function(){
 	/*
 		Y Beams (Middle, Left & Right)
 	*/
-	yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
-	yBeam.position.x = -(elevatorConfig.width/2 - elevatorConfig.thickness/2);
-	yBeam.position.y = yBeamConfig.posY;
-	yBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness/2 - elevatorConfig.depth/2;
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? 1 : -1;
 
-	scene.add(yBeam);
+		yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
+		yBeam.position.x = (elevatorConfig.width/2 - elevatorConfig.thickness/2) * mult;
+		yBeam.position.y = yBeamConfig.posY;
+		yBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness/2 - elevatorConfig.depth/2;
 
-	yBeam = new THREE.Mesh(yBeamGeo, elevatorMat);
-	yBeam.position.x = elevatorConfig.width/2 - elevatorConfig.thickness/2;
-	yBeam.position.y = yBeamConfig.posY;
-	yBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness/2 - elevatorConfig.depth/2;
-
-	scene.add(yBeam);
+		scene.add(yBeam);
+	}
 
 	/*
 		Top X Beam
@@ -772,20 +737,17 @@ var placeElevator = function(){
 	/*
 		Top Z Beam
 	*/
-	var topZBeam = new THREE.Mesh(swhGeo, elevatorMat);
-	topZBeam.position.x = -sWallConfig.posX;
-	topZBeam.position.y = topXBeamConfig.posY;
-	topZBeam.position.z = sWallConfig.posZ;
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? 1 : -1;
+	
+		var topZBeam = new THREE.Mesh(swhGeo, elevatorMat);
+		topZBeam.position.x = sWallConfig.posX * mult;
+		topZBeam.position.y = topXBeamConfig.posY;
+		topZBeam.position.z = sWallConfig.posZ;
 
-	scene.add(topZBeam);
+		scene.add(topZBeam);
 
-	/* Side Wall Handles (Right) */
-	var topZBeam = new THREE.Mesh(swhGeo, elevatorMat);
-	topZBeam.position.x = sWallConfig.posX;
-	topZBeam.position.y = topXBeamConfig.posY;
-	topZBeam.position.z = sWallConfig.posZ;
-
-	scene.add(topZBeam);
+	}
 
 	/*
 		Top Metal Beam
@@ -801,7 +763,7 @@ var placeElevator = function(){
 		elevatorConfig.width + 10,
 		16, 16);
 
-	var metalBeam = new THREE.Mesh(metalBeamGeo, elevatorMat);
+	var metalBeam = new THREE.Mesh(metalBeamGeo, grillMat);
 	metalBeam.rotation.z = metalBeamConfig.rotZ;
 
 	metalBeam.position.x = 0;
@@ -826,6 +788,7 @@ var placeElevator = function(){
 			x += (fWallConfig.width - yBeamConfig.thickness/3)
 		) {
 
+		/* Front Facing Roof Beam */
 		eleRoofBeam = new THREE.Mesh(eleRoofBeamGeo, elevatorMat);
 		eleRoofBeam.rotation.x = eleRoofBeamConfig.rotX;
 
@@ -835,6 +798,7 @@ var placeElevator = function(){
 
 		scene.add(eleRoofBeam);
 
+		/* Back Facing Roof Beam */
 		eleRoofBeam = new THREE.Mesh(eleRoofBeamGeo, elevatorMat);
 		eleRoofBeam.rotation.x = -eleRoofBeamConfig.rotX;
 
@@ -844,14 +808,7 @@ var placeElevator = function(){
 
 		scene.add(eleRoofBeam);
 	}
-
-	/*
-		Ground Floor Door
-	*/
-
-	/*
-		Top Floor Door
-	*/
+	
 
 	/* FB Grills */
 	var fbGrillConfig = {
@@ -864,20 +821,27 @@ var placeElevator = function(){
 	}
 
 	var grillGeo;
+	var grillGroup;
+	var grillObj = function(w, h, wSeg, hSeg, xOff, yOff, zOff, rotY){
 
-	var xGrill = function(w, h, wSeg, hSeg, xOff, yOff, zOff){
+		wSeg = wSeg || 1;
+		hSeg = hSeg || 1;
+		xOff = xOff || 0;
+		yOff = yOff || 0
+		zOff = zOff || 0;
+		rotY = rotY || 0;
 
 		grillGeo = new THREE.CylinderGeometry(0.1, 0.1, h, 16, 16);
-
+		grillGroup = new THREE.Group();
 		/* Y Grill */
 		for (var x = -w/2; x <= w/2 ; x+= w/wSeg) {
 			var grill = new THREE.Mesh(grillGeo, grillMat);
 
-			grill.position.x = x + xOff;
-			grill.position.y = yOff;
-			grill.position.z = zOff;
+			grill.position.x = x + 0;
+			grill.position.y = 0;
+			grill.position.z = 0;
 
-			scene.add(grill);
+			grillGroup.add(grill)
 		};
 
 		/* Top & Bottom */
@@ -888,100 +852,142 @@ var placeElevator = function(){
 
 			grill.rotation.z = 90 * Math.PI/180;
 
-			grill.position.x = xOff;
-			grill.position.y = y + yOff;
-			grill.position.z = zOff;
+			grill.position.x = 0;
+			grill.position.y = y + 0;
+			grill.position.z = 0;
 
-			scene.add(grill);
+			grillGroup.add(grill)
 		}
-	}
 
-	var zGrill = function(d, h, dSeg, hSeg, xOff, yOff, zOff){
+		grillGroup.position.x += xOff;
+		grillGroup.position.y += yOff;
+		grillGroup.position.z += zOff;
+		grillGroup.rotateY(rotY * Math.PI/180);
 
-		grillGeo = new THREE.CylinderGeometry(0.1, 0.1, h, 16, 16);
-
-		/* Y Grill */
-		for (var z = -d/2; z <= d/2 ; z+= d/dSeg) {
-			var grill = new THREE.Mesh(grillGeo, grillMat);
-
-			grill.position.x = xOff;
-			grill.position.y = yOff;
-			grill.position.z = z + zOff;
-
-			scene.add(grill);
-		};
-
-		/* Top & Bottom */
-		grillGeo = new THREE.CylinderGeometry(0.1, 0.1, d, 16, 16);
-
-		for (var y = -h/2; y <= h/2 ; y += h/hSeg) {
-			var grill = new THREE.Mesh(grillGeo, grillMat);
-
-			grill.rotation.y = 90 * Math.PI/180;
-			grill.rotation.z = 90 * Math.PI/180;
-
-			grill.position.x = xOff;
-			grill.position.y = y + yOff;
-			grill.position.z = zOff;
-
-			scene.add(grill);
-		}
+		return grillGroup;
 	}
 
 	/* Front Wall Grill (Left) */
-	xGrill(
-		fbGrillConfig.width,
-		fbGrillConfig.height,
-		4, 6,
-		-(fWallConfig.posX - 0.75),
-		fWallConfig.posY + fWallConfig.height + 3.75,
-		yBeamConfig.posZ
+	scene.add(
+		grillObj(
+			fbGrillConfig.width,
+			fbGrillConfig.height,
+			4, 6,
+			-(fWallConfig.posX - 0.75),
+			fWallConfig.posY + fWallConfig.height + 3.75,
+			yBeamConfig.posZ
+		)
 	);
 	
-
 	/* Front Wall Grill (Right) */
-	xGrill(
-		fbGrillConfig.width,
-		fbGrillConfig.height,
-		4, 6,
-		fWallConfig.posX - 0.75,
-		fWallConfig.posY + fWallConfig.height + 3.75,
-		yBeamConfig.posZ
+	scene.add(
+		grillObj(
+			fbGrillConfig.width,
+			fbGrillConfig.height,
+			4, 6,
+			fWallConfig.posX - 0.75,
+			fWallConfig.posY + fWallConfig.height + 3.75,
+			yBeamConfig.posZ
+		)
 	);
 
 
 	/* Back Wall Grill (Left) */
-	xGrill(
-		fbGrillConfig.width,
-		fbGrillConfig.height,
-		4, 6,
-		-(fWallConfig.posX - 0.75),
-		fWallConfig.posY + fWallConfig.height + 3.75,
-		yBeamConfig.posZ + elevatorConfig.thickness - elevatorConfig.depth
+	scene.add(
+		grillObj(
+			fbGrillConfig.width,
+			fbGrillConfig.height,
+			4, 6,
+			-(fWallConfig.posX - 0.75),
+			fWallConfig.posY + fWallConfig.height + 3.75,
+			yBeamConfig.posZ + elevatorConfig.thickness - elevatorConfig.depth,
+			0
+		)
 	);
 
 	/* Back Wall Grill (Right) */
-	xGrill(
-		fbGrillConfig.width,
-		fbGrillConfig.height,
-		4, 6,
-		fWallConfig.posX - 0.75,
-		fWallConfig.posY + fWallConfig.height + 3.75,
-		yBeamConfig.posZ + elevatorConfig.thickness - elevatorConfig.depth
+	scene.add(
+		grillObj(
+			fbGrillConfig.width,
+			fbGrillConfig.height,
+			4, 6,
+			fWallConfig.posX - 0.75,
+			fWallConfig.posY + fWallConfig.height + 3.75,
+			yBeamConfig.posZ + elevatorConfig.thickness - elevatorConfig.depth
+		)
 	);
 
 	/* Side Wall Grills */
 	for (var i = 0; i < 2; i++) {
 		var mult = (i%2)? 1 : -1;
-		zGrill(
+		grillObj(
 			lrGrillConfig.width,
 			fbGrillConfig.height,
 			4, 6,
 			sWallConfig.posX * mult,
 			sWallConfig.posY + fWallConfig.height + 3.75,
-			sWallConfig.posZ
+			sWallConfig.posZ,
+			90
 		);
 	};
+
+	/*
+		Ground Floor Door
+	*/
+	var doorConfig = {
+		width : elevatorConfig.width/3 - elevatorConfig.thickness*2.5,
+		height: yBeamConfig.height - elevatorConfig.thickness
+	}
+
+	var doorGrillConfig = {
+		width : doorConfig.width - elevatorConfig.thickness,
+		height: doorConfig.height- elevatorConfig.thickness
+	}
+
+	var doorFrameGeo, doorFrame, doorGrill;
+	var frontDoorGroup = new THREE.Group();
+	var backDoorGroup = new THREE.Group();
+	
+	var doorFrameObject = function(group){
+		for (var i = 0; i < 2; i++) {
+			var mult = (i%2)? 1 : -1;
+
+			/* Y Frame Beam */
+			doorFrameGeo = new THREE.BoxGeometry(elevatorConfig.thickness/2, doorConfig.height, elevatorConfig.thickness);
+			doorFrame = new THREE.Mesh(doorFrameGeo, elevatorMat);
+			doorFrame.position.x = doorConfig.width/2 * mult;
+			doorFrame.position.y = 0;
+			doorFrame.position.z = 0;
+
+			group.add(doorFrame);
+
+			/* X Frame Beam */
+			doorFrameGeo = new THREE.BoxGeometry(doorConfig.width, elevatorConfig.thickness/2, elevatorConfig.thickness);
+			doorFrame = new THREE.Mesh(doorFrameGeo, elevatorMat);
+			doorFrame.position.x = 0;
+			doorFrame.position.y = (doorConfig.height/2 - elevatorConfig.thickness/4) * mult;
+			doorFrame.position.z = 0;
+
+			group.add(doorFrame);
+
+			/* Door Grill */
+			doorGrill = grillObj(doorGrillConfig.width, doorGrillConfig.height, 3, 6);
+
+			group.add(doorGrill);
+		}
+
+		group.position.x += 0;
+		group.position.y  = yBeamConfig.posY + 0.5;
+		group.position.z += elevatorConfig.posZ + elevatorConfig.depth/2 - elevatorConfig.thickness/2;
+	}
+
+	doorFrameObject(frontDoorGroup);
+	doorFrameObject(backDoorGroup);
+
+	backDoorGroup.position.z =  frontDoorGroup.position.z - (elevatorConfig.depth - elevatorConfig.thickness);
+
+	scene.add(frontDoorGroup);
+	scene.add(backDoorGroup);
 	
 }
 
@@ -1029,11 +1035,11 @@ var animate = function(t){
 
 init();
 placeLight();
-/*placeGround();
+placeGround();
 placeWall();
 placeTopWall();
-placeCastle();
-placeElevatorBeams();*/
+//placeCastle();
+placeElevatorBeams();
 placeElevator();
 
 animate(new Date().getTime());
