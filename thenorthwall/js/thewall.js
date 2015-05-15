@@ -9,6 +9,9 @@ var longBeam, zBeam;
 
 var wallBlock;
 
+var reachedTop = false;
+var reachedBot = true;
+
 var groundConfig = {
 	width : 12000,
 	height: 10,
@@ -26,8 +29,18 @@ var elevatorConfig = {
 	height	: 20,
 	depth	: 30,
 	posY	: groundConfig.height/2 + 10,
-	posZ	: wallConfig.depth,
 	thickness	: 2
+}
+elevatorConfig.posZ = wallConfig.depth/2 + 50 + Math.tan(0.092528)*(wallConfig.height - elevatorConfig.posY);
+
+var longBeamConfig = {
+	width	: 10,
+	height	: wallConfig.height + 100,
+	depth	: 40,
+	posX	: elevatorConfig.width/2 + 10,
+	posY	: wallConfig.height/2 + 50,
+	posZ	: wallConfig.depth/2 + 140,
+	rotX	: -0.092528
 }
 
 /* Beam Material */
@@ -76,8 +89,8 @@ var init = function(){
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
 	camera.position.x = 0;
-	camera.position.y = 50;
-	camera.position.z = 10000;
+	camera.position.y = 100;
+	camera.position.z = 3000;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -447,17 +460,9 @@ var placeCastle = function(){
 
 var placeElevatorBeams = function(){
 	/*
-		Elevator
+		Elevator Beams
 	*/
-	var longBeamConfig = {
-		width	: 10,
-		height	: wallConfig.height + 100,
-		depth	: 40,
-		posX	: elevatorConfig.width/2 + 10,
-		posY	: wallConfig.height/2 + 50,
-		posZ	: wallConfig.depth/2 + 150,
-		rotX	: -0.092528
-	}
+	
 	var longBeamGeo = new THREE.BoxGeometry(longBeamConfig.width, longBeamConfig.height, longBeamConfig.depth);
 
 	/* Long Beam Left */
@@ -529,7 +534,7 @@ var placeElevatorBeams = function(){
 	for(var y = 195; y < longBeamConfig.height; y+=150){
 
 		// Skewing the Z position according to Long Beam's X Rotation
-		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 80;
+		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 85;
 
 		/* Left Z Beams */
 		xBeam = new THREE.Mesh(xBeamGeo, beamMat);
@@ -542,6 +547,7 @@ var placeElevatorBeams = function(){
 
 var placeElevator = function(){
 
+	elevator = new THREE.Group();
 	var elevatorMat = beamMat;
 
 	/* 
@@ -557,7 +563,7 @@ var placeElevator = function(){
 	elevatorBase.position.y = elevatorConfig.posY + elevatorConfig.thickness/2;
 	elevatorBase.position.z = elevatorConfig.posZ;
 
-	scene.add(elevatorBase);
+	elevator.add(elevatorBase);
 
 	/* 
 		Front Wall (ground floor door) 
@@ -593,14 +599,14 @@ var placeElevator = function(){
 		fWall.position.y = fWallConfig.posY;
 		fWall.position.z = fWallConfig.posZ;
 
-		scene.add(fWall);
+		elevator.add(fWall);
 
 		var fwh = new THREE.Mesh(fwhGeo, elevatorMat);
 		fwh.position.x = fwhConfig.posX * mult;
 		fwh.position.y = fwhConfig.posY;
 		fwh.position.z = fwhConfig.posZ;
 
-		scene.add(fwh);
+		elevator.add(fwh);
 	};
 
 	/* Adding Back Wall Objects */
@@ -612,14 +618,14 @@ var placeElevator = function(){
 		bWall.position.y = fWallConfig.posY;
 		bWall.position.z = fWallConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
 
-		scene.add(bWall);
+		elevator.add(bWall);
 
 		var bwh = new THREE.Mesh(fwhGeo, elevatorMat);
 		bwh.position.x = fwhConfig.posX * mult;
 		bwh.position.y = fwhConfig.posY;
 		bwh.position.z = fwhConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
 
-		scene.add(bwh);
+		elevator.add(bwh);
 	};
 
 	/* 
@@ -647,14 +653,14 @@ var placeElevator = function(){
 		sWallLeft.position.y = sWallConfig.posY;
 		sWallLeft.position.z = sWallConfig.posZ;
 
-		scene.add(sWallLeft);
+		elevator.add(sWallLeft);
 
 		var swh = new THREE.Mesh(swhGeo, elevatorMat);
 		swh.position.x = sWallConfig.posX * mult;
 		swh.position.y = fwhConfig.posY;
 		swh.position.z = sWallConfig.posZ;
 
-		scene.add(swh);
+		elevator.add(swh);
 	}
 
 
@@ -682,7 +688,7 @@ var placeElevator = function(){
 		yBeam.position.y = yBeamConfig.posY;
 		yBeam.position.z = yBeamConfig.posZ;
 
-		scene.add(yBeam);
+		elevator.add(yBeam);
 	};
 
 	/*
@@ -697,7 +703,7 @@ var placeElevator = function(){
 		yBeam.position.y = yBeamConfig.posY;
 		yBeam.position.z = yBeamConfig.posZ - elevatorConfig.depth + elevatorConfig.thickness;
 
-		scene.add(yBeam);
+		elevator.add(yBeam);
 	};
 
 	/*
@@ -711,7 +717,7 @@ var placeElevator = function(){
 		yBeam.position.y = yBeamConfig.posY;
 		yBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness/2 - elevatorConfig.depth/2;
 
-		scene.add(yBeam);
+		elevator.add(yBeam);
 	}
 
 	/*
@@ -731,7 +737,7 @@ var placeElevator = function(){
 		topXBeam.position.y = topXBeamConfig.posY;
 		topXBeam.position.z = z;
 
-		scene.add(topXBeam);
+		elevator.add(topXBeam);
 	};
 
 	/*
@@ -745,7 +751,7 @@ var placeElevator = function(){
 		topZBeam.position.y = topXBeamConfig.posY;
 		topZBeam.position.z = sWallConfig.posZ;
 
-		scene.add(topZBeam);
+		elevator.add(topZBeam);
 
 	}
 
@@ -770,7 +776,7 @@ var placeElevator = function(){
 	metalBeam.position.y = topXBeamConfig.posY + metalBeamConfig.radius + 2;
 	metalBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness/2 - elevatorConfig.depth/2;;
 
-	scene.add(metalBeam);
+	elevator.add(metalBeam);
 
 	/*
 		Roof
@@ -796,7 +802,7 @@ var placeElevator = function(){
 		eleRoofBeam.position.y = metalBeam.position.y + metalBeamConfig.radius/2 - 0.5;
 		eleRoofBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness - elevatorConfig.depth/3 + 1.5;
 
-		scene.add(eleRoofBeam);
+		elevator.add(eleRoofBeam);
 
 		/* Back Facing Roof Beam */
 		eleRoofBeam = new THREE.Mesh(eleRoofBeamGeo, elevatorMat);
@@ -806,7 +812,7 @@ var placeElevator = function(){
 		eleRoofBeam.position.y = metalBeam.position.y + metalBeamConfig.radius/2 - 0.5;
 		eleRoofBeam.position.z = yBeamConfig.posZ + elevatorConfig.thickness - (elevatorConfig.depth/3)*2 - 3.5;
 
-		scene.add(eleRoofBeam);
+		elevator.add(eleRoofBeam);
 	}
 	
 
@@ -868,7 +874,7 @@ var placeElevator = function(){
 	}
 
 	/* Front Wall Grill (Left) */
-	scene.add(
+	elevator.add(
 		grillObj(
 			fbGrillConfig.width,
 			fbGrillConfig.height,
@@ -880,7 +886,7 @@ var placeElevator = function(){
 	);
 	
 	/* Front Wall Grill (Right) */
-	scene.add(
+	elevator.add(
 		grillObj(
 			fbGrillConfig.width,
 			fbGrillConfig.height,
@@ -893,7 +899,7 @@ var placeElevator = function(){
 
 
 	/* Back Wall Grill (Left) */
-	scene.add(
+	elevator.add(
 		grillObj(
 			fbGrillConfig.width,
 			fbGrillConfig.height,
@@ -906,7 +912,7 @@ var placeElevator = function(){
 	);
 
 	/* Back Wall Grill (Right) */
-	scene.add(
+	elevator.add(
 		grillObj(
 			fbGrillConfig.width,
 			fbGrillConfig.height,
@@ -986,9 +992,11 @@ var placeElevator = function(){
 
 	backDoorGroup.position.z =  frontDoorGroup.position.z - (elevatorConfig.depth - elevatorConfig.thickness);
 
-	scene.add(frontDoorGroup);
-	scene.add(backDoorGroup);
+	elevator.add(frontDoorGroup);
+	elevator.add(backDoorGroup);
 	
+	/* Place Elevator */
+	scene.add(elevator);
 }
 
 /*	Pyramid Geometry Function	*/
@@ -1028,6 +1036,33 @@ var noseGeometry = function(width, height, depth, angle){
 };
 
 var animate = function(t){
+
+	// Going Up
+	if(!reachedTop){
+		if(elevator.position.y < wallConfig.height - elevatorConfig.height/2){
+			elevator.position.y++;
+			elevator.position.z = Math.tan(0.092528) * (wallConfig.height - elevator.position.y) - 220;
+		}
+
+		if(elevator.position.y == (wallConfig.height - elevatorConfig.height/2)){
+			reachedTop = true;
+			reachedBot = false;
+		}
+	}
+
+	// Going down
+	if(!reachedBot){
+		if(elevator.position.y > elevatorConfig.posY){
+			elevator.position.y--;
+			elevator.position.z = Math.tan(0.092528) * (wallConfig.height - elevator.position.y) - 220;
+		}
+
+		if(elevator.position.y == elevatorConfig.posY){
+			reachedTop = false;
+			reachedBot = true;
+		}
+	}
+
 	renderer.render(scene, camera);
 	controls.update();
 	window.requestAnimationFrame(animate, renderer.domElement);
