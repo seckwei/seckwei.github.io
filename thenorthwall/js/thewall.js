@@ -1247,7 +1247,7 @@ var runElevator = function(){
 
 var animate = function(t){
 
-	//runElevator();
+	runElevator();
 
 	renderer.render(scene, camera);
 	controls.update();
@@ -1259,9 +1259,9 @@ init();
 placeLight();
 placeWall();
 placeTopWall();
-/*placeGround();
+placeGround();
 placeElevatorBeams();
 placeElevator();
-placeCastle();*/
+//placeCastle();
 
 animate(new Date().getTime());
