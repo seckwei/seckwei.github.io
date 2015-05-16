@@ -89,8 +89,8 @@ var init = function(){
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
 	camera.position.x = 0;
-	camera.position.y = 100;
-	camera.position.z = 3000;
+	camera.position.y = 300;
+	camera.position.z = 1000;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -433,6 +433,188 @@ var placeTopWall = function(){
 		placeYSupBeam(x-xOff, y-10, -zOff1);
 		placeYSupBeam(x-xOff, y-10, -zOff2);
 	};
+
+
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
+		placeWoodenPlatforms(x);
+	}	
+};
+
+var placeWoodenPlatforms = function(_x){
+	var platformGroup = new THREE.Group();
+	/* 
+		Wooden Platforms (facing North) 
+	*/
+	var wPlatConfig = {
+		width : 80,
+		height: 80,
+		depth : 50,
+		thickness: 2
+	}
+	var woodPlankGeo = new THREE.BoxGeometry(wPlatConfig.width, wPlatConfig.thickness, wPlatConfig.depth/4 - 5);
+
+	/* X Planks */
+	for(var z = -wPlatConfig.depth; z < wPlatConfig.depth; z+= wPlatConfig.depth/6){
+
+		var woodPlank = new THREE.Mesh(woodPlankGeo, beamMat);
+		woodPlank.position.x = 0;
+		woodPlank.position.y = 0;
+		woodPlank.position.z = z;
+
+		platformGroup.add(woodPlank);
+	}
+
+	/* Z Support Beams */
+	var wBeamConfig = {
+		width : wPlatConfig.thickness*2,
+		height: wPlatConfig.thickness*4
+	}
+
+	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width, wBeamConfig.height, wPlatConfig.depth*2);
+
+	for(var x = -(wPlatConfig.width - wBeamConfig.width)/2; 
+		x <= (wPlatConfig.width/2 - wBeamConfig.width/2);
+		x += (wPlatConfig.width - wBeamConfig.width)/4)
+	{
+
+		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+		woodBeam.position.x = x;
+		woodBeam.position.y = -(wBeamConfig.height + wPlatConfig.thickness)/2;
+		woodBeam.position.z = 0;
+
+		platformGroup.add(woodBeam);
+	}
+
+	/* Rotated X Support Beam */
+	var xWoodBeamConfig = {
+		width : wPlatConfig.width + 30,
+		rotX  : 25 * Math.PI/180
+	}
+	var woodBeamGeo = new THREE.BoxGeometry(xWoodBeamConfig.width, wBeamConfig.height, wBeamConfig.height/2);
+	var xWoodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+	xWoodBeam.position.x = 0;
+	xWoodBeam.position.y = -(wPlatConfig.thickness + wBeamConfig.height)/2 - wBeamConfig.height;
+	xWoodBeam.position.z = wPlatConfig.depth/2 + wPlatConfig.depth/4;
+
+	xWoodBeam.rotation.x = xWoodBeamConfig.rotX;
+
+	platformGroup.add(xWoodBeam);
+
+	/* Inclined Y Support Beam */
+	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height*2.5, wBeamConfig.width*2);
+
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? -1 : 1;
+
+		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+		woodBeam.position.x = (wPlatConfig.width/2 + wBeamConfig.width) * mult;
+		woodBeam.position.y = xWoodBeam.position.y - 20;
+		woodBeam.position.z = xWoodBeam.position.z - 3;
+
+		woodBeam.rotation.x = xWoodBeamConfig.rotX;
+
+		platformGroup.add(woodBeam);
+
+	};
+
+	/* Y Support Beam */
+	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height, wBeamConfig.width*2);
+
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? -1 : 1;
+
+		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+		woodBeam.position.x = (wPlatConfig.width/2 + wBeamConfig.width) * mult;
+		woodBeam.position.y = wPlatConfig.height/2 - 20;
+		woodBeam.position.z = -wPlatConfig.depth/4;
+
+		platformGroup.add(woodBeam);
+
+	};
+
+	/* Inclined Y Support Beam */
+	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height + 5, wBeamConfig.width*2);
+
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? -1 : 1;
+
+		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+		woodBeam.position.x = (wPlatConfig.width/2 + wBeamConfig.width*3) * mult;
+		woodBeam.position.y = xWoodBeam.position.y + wPlatConfig.height/5;
+		woodBeam.position.z = wPlatConfig.depth/4;
+
+		woodBeam.rotation.x = -(xWoodBeamConfig.rotX + 15 * Math.PI/180);
+
+		platformGroup.add(woodBeam);
+
+	};
+
+	/* Top X Beam */
+	var woodBeamGeo = new THREE.BoxGeometry(wPlatConfig.width, wBeamConfig.height, wBeamConfig.height);
+	var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+	woodBeam.position.x = 0;
+	woodBeam.position.y = wPlatConfig.height - wBeamConfig.height/2 - 20;
+	woodBeam.position.z = -wPlatConfig.depth/4;
+
+	platformGroup.add(woodBeam);
+
+
+	/* Rotated X Roof Plank */
+	var woodBeamGeo = new THREE.BoxGeometry(wPlatConfig.width + 10, wBeamConfig.height*1.5, wBeamConfig.height/2);
+	var xWoodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+
+	xWoodBeam.position.x = 0;
+	xWoodBeam.position.y = wPlatConfig.height - wBeamConfig.height/2 - 15 - wBeamConfig.height/2;
+	xWoodBeam.position.z = wPlatConfig.depth*1.5;
+
+	xWoodBeam.rotation.x = xWoodBeamConfig.rotX - 10 * Math.PI/180;
+
+	platformGroup.add(xWoodBeam);
+
+	/* Roof Z Beams */
+	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width, wBeamConfig.height, wPlatConfig.depth*2 + 5);
+
+	for(var x = -(wPlatConfig.width - wBeamConfig.width)/2; 
+		x <= (wPlatConfig.width/2 - wBeamConfig.width/2);
+		x += (wPlatConfig.width - wBeamConfig.width)/3)
+	{
+
+		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
+		woodBeam.position.x = x;
+		woodBeam.position.y = wPlatConfig.height - wBeamConfig.height/2 - 17 + wBeamConfig.height/2;
+		woodBeam.position.z = wPlatConfig.depth*4/6 + 5;
+
+		platformGroup.add(woodBeam);
+	}
+
+	/* Roof X Planks */
+	for(var z = -wPlatConfig.depth; z < wPlatConfig.depth; z+= wPlatConfig.depth/6){
+
+		var woodPlank = new THREE.Mesh(woodPlankGeo, beamMat);
+		woodPlank.position.x = 0;
+		woodPlank.position.y = wPlatConfig.height - wBeamConfig.height/2 - 17 + wBeamConfig.height;
+		woodPlank.position.z = z + wPlatConfig.depth*4/6;
+
+		platformGroup.add(woodPlank);
+	}
+
+
+	platformGroup.position.x = _x;
+	platformGroup.position.y += wallConfig.height + 5;
+	platformGroup.position.z -= wallConfig.depth/2 + wPlatConfig.depth/2;
+
+	platformGroup.rotation.y = 180 * Math.PI/180;
+
+	platformGroup.scale.x = 0.5;
+	platformGroup.scale.y = 0.5;
+	platformGroup.scale.z = 0.5;
+
+	scene.add(platformGroup);
 }
 
 var placeCastle = function(){
@@ -543,7 +725,7 @@ var placeElevatorBeams = function(){
 
 		scene.add(xBeam);
 	}
-}
+};
 
 var placeElevator = function(){
 
@@ -997,7 +1179,7 @@ var placeElevator = function(){
 	
 	/* Place Elevator */
 	scene.add(elevator);
-}
+};
 
 /*	Pyramid Geometry Function	*/
 var noseGeometry = function(width, height, depth, angle){
@@ -1035,8 +1217,7 @@ var noseGeometry = function(width, height, depth, angle){
 	return noseGeo;
 };
 
-var animate = function(t){
-
+var runElevator = function(){
 	// Going Up
 	if(!reachedTop){
 		if(elevator.position.y < wallConfig.height - elevatorConfig.height/2){
@@ -1062,19 +1243,25 @@ var animate = function(t){
 			reachedBot = true;
 		}
 	}
+};
+
+var animate = function(t){
+
+	//runElevator();
 
 	renderer.render(scene, camera);
 	controls.update();
 	window.requestAnimationFrame(animate, renderer.domElement);
 };
 
+
 init();
 placeLight();
-placeGround();
 placeWall();
 placeTopWall();
-//placeCastle();
+/*placeGround();
 placeElevatorBeams();
 placeElevator();
+placeCastle();*/
 
 animate(new Date().getTime());
