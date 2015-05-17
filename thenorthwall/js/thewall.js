@@ -19,7 +19,11 @@ var groundConfig = {
 };
 
 var wallConfig = {
-	width  : 400*2*10,
+	// 800 is initial width
+	// x10 to scale
+	// x2 to extend
+	// +100 to accomodate for top of wall blocks
+	width  : 800*10*2 + 100,
 	height : 220*10,
 	depth  : 50*10
 }
@@ -72,7 +76,7 @@ var init = function(){
 	var VIEW_ANGLE = 45;
 	var ASPECT = WIDTH / HEIGHT;
 	var NEAR = 0.1;
-	var FAR = 50000;
+	var FAR = 100000;
 
 	// Get DOM Element
 	var $container = $('#container');
@@ -178,7 +182,7 @@ var placeGround = function(){
 
 	ground = new THREE.Mesh(groundGeo, groundMat);
 
-	ground.position.y = groundConfig.height/2;
+	ground.position.y = -groundConfig.height/2;
 
 	scene.add(ground);
 };
@@ -192,7 +196,7 @@ var placeWall = function(){
 		wallConfig.width, 
 		wallConfig.height, 
 		wallConfig.depth,
-		100, 10
+		200, 10
 	);
 
 	wallGeo.vertices = wallVertexZ10;
@@ -1149,7 +1153,7 @@ var runElevator = function(){
 
 var animate = function(t){
 
-	//runElevator();
+	runElevator();
 
 	renderer.render(scene, camera);
 	controls.update();
@@ -1163,7 +1167,7 @@ placeWall();
 placeTopWall();
 placeGround();
 placeElevatorBeams();
-//placeElevator();
+placeElevator();
 //placeCastle();
 
 animate(new Date().getTime());
