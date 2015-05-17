@@ -2,7 +2,7 @@ var scene, camera, controls, renderer;
 var ground, wall, castle, elevator;
 var light, lightBall;
 
-var wallGeo;
+var wallGeo, groundGeo;
 
 var wallPlane, wallPlaneGeo, wallBlockGeo;
 var longBeam, zBeam;
@@ -13,9 +13,9 @@ var reachedTop = false;
 var reachedBot = true;
 
 var groundConfig = {
-	width : 12000,
-	height: 10,
-	depth : 3000
+	width : 20000,
+	height: 100,
+	depth : 20000
 };
 
 var wallConfig = {
@@ -159,40 +159,26 @@ var placeGround = function(){
 
 	var groundMat = new THREE.MeshLambertMaterial({
 		color : 0xFFFFFF,
-		side  : THREE.DoubleSide
+		shading: THREE.FlatShading,
+		side  : THREE.DoubleSide,
+		wireframe : false
 	});
 
-	var groundGeo = new THREE.BoxGeometry( groundConfig.width, groundConfig.height, groundConfig.depth );
-
-
-	/*var groundGeo = new THREE.Geometry();
-	var area = 300;
-
-	
-	   -x,-z(3) |    x ,-z (1)
-				|
-				|
-		--------+---------> x
-				|
-				|    
-	   -x, z(2) |    x , z (0)
-				v
-				z
-
-		
-	groundGeo.vertices.push(
-		new THREE.Vector3(  area*2, 0,  area ),
-		new THREE.Vector3(  area*2, 0, -area ),
-		new THREE.Vector3( -area*2, 0,  area ),
-		new THREE.Vector3( -area*2, 0, -area )
+	groundGeo = new THREE.BoxGeometry( 
+		groundConfig.width, 
+		groundConfig.height, 
+		groundConfig.depth,
+		100, 1, 100
 	);
 
-	groundGeo.faces.push(
-		new THREE.Face3( 0, 1, 2 ),
-		new THREE.Face3( 2, 1, 3 )
-	);*/
+	groundGeo.vertices = groundVertexY;
+
+	groundGeo.computeVertexNormals();
+	groundGeo.computeFaceNormals();
 
 	ground = new THREE.Mesh(groundGeo, groundMat);
+
+	ground.position.y = groundConfig.height/2;
 
 	scene.add(ground);
 };
@@ -209,54 +195,6 @@ var placeWall = function(){
 		100, 10
 	);
 
-	/* Uneven Wall Surfaces */
-	/*var y;
-	for(var i = 0; i < wallGeo.vertices.length; i++){
-		y = wallGeo.vertices[i].y;
-		z = wallGeo.vertices[i].z;
-
-		if(z > 0){
-			if(y <= 1100 && y >= 880){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10);
-			}
-			else if(y == 660){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+20*1.3;
-			}
-			else if(y <= 440 && y >= 0){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+50;
-			}
-			else if(y <= -220 && y >= -660 ){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+80*1.5;
-			}
-			else if(y == -880){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+110*1.5;
-			}
-			else if(y == -1100){
-				wallGeo.vertices[i].z += (Math.random() * 30 + 10)+130*1.5;
-			}
-		}
-
-		if(z < 0){
-			if(y <= 1100 && y >= 880){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10);
-			}
-			else if(y == 660){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+20*1.3;
-			}
-			else if(y <= 440 && y >= 0){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+50;
-			}
-			else if(y <= -220 && y >= -660 ){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+80*1.5;
-			}
-			else if(y == -880){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+110*1.5;
-			}
-			else if(y == -1100){
-				wallGeo.vertices[i].z -= (Math.random() * 30 + 10)+130*1.5;
-			}
-		}
-	}*/
 	wallGeo.vertices = wallVertexZ10;
 
 	wallGeo.computeFaceNormals();
@@ -1181,42 +1119,6 @@ var placeElevator = function(){
 	scene.add(elevator);
 };
 
-/*	Pyramid Geometry Function	*/
-var noseGeometry = function(width, height, depth, angle){
-
-	angle = angle || 0;
-
-	var noseGeo = new THREE.Geometry();
-	
-	/*
-	   (3) (2) (1)
-		\   |   /
-		 \  |  /
-		  \ | /
-		   \|/ (0)
-	*/
-
-	noseGeo.vertices.push(
-		new THREE.Vector3(  	0,		 0,     0), // 0
-		new THREE.Vector3( 	width,	height,	    0), // 1
-		new THREE.Vector3(  	0,  height, depth), // 2 (Nose Tip)
-		new THREE.Vector3( -width,  height,     0)  // 3
-	);
-
-	noseGeo.faces.push(
-		new THREE.Face3(0,1,2),
-		new THREE.Face3(2,1,3),
-		new THREE.Face3(0,2,3)
-	);
-
-	// These are to recompute the normal of each vertex and face
-	// otherwise the nose will appear black
-	noseGeo.computeFaceNormals();
-	noseGeo.computeVertexNormals();
-
-	return noseGeo;
-};
-
 var runElevator = function(){
 	// Going Up
 	if(!reachedTop){
@@ -1247,7 +1149,7 @@ var runElevator = function(){
 
 var animate = function(t){
 
-	runElevator();
+	//runElevator();
 
 	renderer.render(scene, camera);
 	controls.update();
@@ -1261,7 +1163,7 @@ placeWall();
 placeTopWall();
 placeGround();
 placeElevatorBeams();
-placeElevator();
+//placeElevator();
 //placeCastle();
 
 animate(new Date().getTime());
