@@ -1,16 +1,23 @@
-var scene, camera, controls, renderer;
-var ground, wall, castle, elevator;
-var light, lightBall;
+/*
+	THE NORTH WALL - GAME OF THRONES
+	Seck Wei, Lim - 2015
 
-var wallGeo, groundGeo;
+	Using 
+	- @mrdoob's THREE.JS & Orbit Controls
+	- Google's Chrome Experiment DAT.GUI
+*/
 
-var wallPlane, wallPlaneGeo, wallBlockGeo;
-var longBeam, zBeam;
 
-var wallBlock;
+/**************************************
+	
+		CONFIGURATION VARIABLES
 
-var reachedTop = false;
-var reachedBot = true;
+***************************************/
+var camConfig = {
+	posX : 0,
+	posY : 300,
+	posZ : 1000
+}
 
 var groundConfig = {
 	width : 20000,
@@ -27,6 +34,14 @@ var wallConfig = {
 	height : 220*10,
 	depth  : 50*10
 }
+
+var wallBlockConfig = {
+	width  : 305,
+	height : 50,
+	depth  : 200
+}
+wallBlockConfig.posY = wallConfig.height + wallBlockConfig.height/2;
+wallBlockConfig.posZ = wallConfig.depth/2 - wallBlockConfig.depth/2;
 
 var elevatorConfig = {
 	width	: 50,
@@ -47,6 +62,12 @@ var longBeamConfig = {
 	rotX	: -0.092528
 }
 
+
+/**************************************
+	
+			OBJECT MATERIALS
+
+***************************************/
 /* Beam Material */
 var beamMat = new THREE.MeshLambertMaterial({
 	color   : 0x645242,
@@ -66,6 +87,13 @@ var wallMat = new THREE.MeshLambertMaterial({
 	wireframe : false
 });
 
+
+/**************************************
+	
+			INITIALISATION
+
+***************************************/
+var scene, camera, controls, renderer;
 var init = function(){
 
 	// WINDOW SIZE
@@ -92,9 +120,9 @@ var init = function(){
 	// CAMERA
 	camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 	
-	camera.position.x = 0;
-	camera.position.y = 300;
-	camera.position.z = 1000;
+	camera.position.x = camConfig.posX;
+	camera.position.y = camConfig.posY;
+	camera.position.z = camConfig.posZ;
 	
 	// ORBIT CONTROLS
 	controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -109,16 +137,18 @@ var init = function(){
 	window.addEventListener('resize', onWindowResize, false);
 };
 
-var onWindowResize = function(){
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
 
-	renderer.setSize(window.innerWidth, window.innerHeight);
-};
+/**************************************
+	
+		OBJECTS CREATION & PLACMENT
 
+***************************************/
+var light, lightBall;
 var placeLight = function(){
 
-	// Directional Light
+	/*
+		Directional Light 1
+	*/
 	var x = 300;
 	var y = 500;
 	var z = 500;
@@ -128,7 +158,7 @@ var placeLight = function(){
 
 	scene.add(light);
 
-	// Light ball
+	// Light ball 1
 	var lightBallMat = new THREE.MeshBasicMaterial( { color: 0xFFFF } );
 	var lightBallGeo = new THREE.SphereGeometry( 10, 16, 16 );
 	lightBall = new THREE.Mesh(lightBallGeo, lightBallMat);
@@ -138,9 +168,11 @@ var placeLight = function(){
 
 	scene.add(lightBall);
 
-	// Directional Light 2
+	/*
+		Directional Light 2
+	*/
 	x = -300;
-	y = 200;
+	y =  200;
 	z = -1000;
 
 	light = new THREE.DirectionalLight( 0xFFFFFF, 0.5 );
@@ -148,9 +180,7 @@ var placeLight = function(){
 
 	scene.add(light);
 
-	// Light ball
-	var lightBallMat = new THREE.MeshBasicMaterial( { color: 0xFFFF } );
-	var lightBallGeo = new THREE.SphereGeometry( 10, 16, 16 );
+	// Light ball 2
 	lightBall = new THREE.Mesh(lightBallGeo, lightBallMat);
 	lightBall.position.x = x;
 	lightBall.position.y = y;
@@ -159,6 +189,7 @@ var placeLight = function(){
 	scene.add(lightBall);
 };
 
+var ground;
 var placeGround = function(){
 
 	var groundMat = new THREE.MeshLambertMaterial({
@@ -168,7 +199,7 @@ var placeGround = function(){
 		wireframe : false
 	});
 
-	groundGeo = new THREE.BoxGeometry( 
+	var groundGeo = new THREE.BoxGeometry( 
 		groundConfig.width, 
 		groundConfig.height, 
 		groundConfig.depth,
@@ -177,16 +208,15 @@ var placeGround = function(){
 
 	groundGeo.vertices = groundVertexY;
 
-	groundGeo.computeVertexNormals();
-	groundGeo.computeFaceNormals();
+	computeNormals(groundGeo);
 
 	ground = new THREE.Mesh(groundGeo, groundMat);
-
 	ground.position.y = -groundConfig.height/2;
 
 	scene.add(ground);
 };
 
+var wall, wallGeo;
 var placeWall = function(){
 
 	/*
@@ -201,8 +231,7 @@ var placeWall = function(){
 
 	wallGeo.vertices = wallVertexZ10;
 
-	wallGeo.computeFaceNormals();
-	wallGeo.computeVertexNormals();
+	computeNormals(wallGeo);
 
 	wall = new THREE.Mesh(wallGeo, wallMat);
 	wall.position.y = wallConfig.height/2 + 0.1;
@@ -210,18 +239,27 @@ var placeWall = function(){
 	scene.add(wall);
 };
 
+var wallBlock, wallBlockGeo;
 var placeTopWall = function(){
+
 	/*
-		Top of Wall
+		Wall Block Top View
+		 ___________
+	  S	|			| S
+	  i	|   Height	| i
+	  d	|   Points	| d
+	  e	|			| e
+	  s	|___________| s
+			Front
 	*/
-	var wallBlockConfig = {
-		width  : 305,
-		height : 50,
-		depth  : 200
-	}
 	
-	/* Generating the wall blocks for top of wall */
-	for(var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-100)/2; x+=wallBlockConfig.width+100){
+	/* 
+		Generating the wall blocks for top of wall 
+	*/
+	for(var x = -(wallConfig.width/2 - wallBlockConfig.width/2); 
+		x < (wallConfig.width-100)/2; 
+		x+=wallBlockConfig.width+100 // Space between wall blocks = 100
+	){
 
 		/* South Facing Wall Block */
 		wallBlockGeo = new THREE.BoxGeometry(
@@ -252,17 +290,13 @@ var placeTopWall = function(){
 			}
 		}
 
-		wallBlockGeo.computeVertexNormals();
-		wallBlockGeo.computeFaceNormals();
-		
-		var y = wallConfig.height + wallBlockConfig.height/2;
-		var z = wallConfig.depth/2 - wallBlockConfig.depth/2;
+		computeNormals(wallBlockGeo);
 
 		wallBlock = new THREE.Mesh(wallBlockGeo, wallMat);
 		
 		wallBlock.position.x = x;
-		wallBlock.position.y = y;
-		wallBlock.position.z = z;
+		wallBlock.position.y = wallBlockConfig.posY;
+		wallBlock.position.z = wallBlockConfig.posZ;
 
 		scene.add(wallBlock);
 
@@ -295,17 +329,13 @@ var placeTopWall = function(){
 			}
 		}
 
-		wallBlockGeo.computeVertexNormals();
-		wallBlockGeo.computeFaceNormals();
-		
-		var y = wallConfig.height + wallBlockConfig.height/2;
-		var z = wallConfig.depth/2 - wallBlockConfig.depth/2;
+		computeNormals(wallBlockGeo);
 
 		wallBlock = new THREE.Mesh(wallBlockGeo, wallMat);
 		
 		wallBlock.position.x = x;
-		wallBlock.position.y = y;
-		wallBlock.position.z = -z;
+		wallBlock.position.y = wallBlockConfig.posY;
+		wallBlock.position.z = -wallBlockConfig.posZ;
 
 		scene.add(wallBlock);
 	}
@@ -315,35 +345,19 @@ var placeTopWall = function(){
 
 	var y = wallConfig.height + wallBlockConfig.height - 25;
 	var z = 50;
-	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
-	xSupBeam.position.y = y;
-	xSupBeam.position.z = z;
 
-	scene.add(xSupBeam);
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? -1 : 1;
 
-	var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
-	xSupBeam.position.y = y;
-	xSupBeam.position.z = -z;
+		var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
+		xSupBeam.position.y = y;
+		xSupBeam.position.z = z*mult;
 
-	scene.add(xSupBeam);
+		scene.add(xSupBeam);
+	}
 
-
-	/* Z Support Beam */
+	/* Z, Y Beams & Wooden Platform */
 	var zSupBeamGeo = new THREE.BoxGeometry( 10, 10, wallConfig.depth );
-
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
-		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
-		zSupBeam.position.y = y - 5;
-		zSupBeam.position.x = x - 40;
-		scene.add(zSupBeam);
-
-		var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
-		zSupBeam.position.y = y - 5;
-		zSupBeam.position.x = x + 40;
-		scene.add(zSupBeam);
-	};
-
-	/* Y Support Beam */
 	var ySupBeamGeo = new THREE.BoxGeometry( 10, 40, 10 );
 
 	var placeYSupBeam = function(x, y, z){
@@ -354,17 +368,27 @@ var placeTopWall = function(){
 		scene.add(ySupBeam);
 	};
 
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width/2); x < (wallConfig.width-10)/2; x+=wallBlockConfig.width+100) {
+	var xOff = 45;
+	var zOff1 = 120;
+	var zOff2 = 170;
+
+	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
+		/* Z Support Beam */
+		for (var i = 0; i < 2; i++) {
+			var mult = (i%2)? -1 : 1;
+
+			var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
+			zSupBeam.position.y = y - 5;
+			zSupBeam.position.x = x + 40*mult;
+			scene.add(zSupBeam);	
+		}
+
+		/* Y Support Beam */
 		placeYSupBeam(x+50, y-10,  48);
 		placeYSupBeam(x+50, y-10, -48);
 		placeYSupBeam(x-50, y-10,  48);
 		placeYSupBeam(x-50, y-10, -48);
-	};
-
-	var xOff = 45;
-	var zOff1 = 120;
-	var zOff2 = 170;
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
+		
 		placeYSupBeam(x+xOff, y-10, zOff1);
 		placeYSupBeam(x+xOff, y-10, zOff2);
 		placeYSupBeam(x-xOff, y-10, zOff1);
@@ -374,15 +398,14 @@ var placeTopWall = function(){
 		placeYSupBeam(x+xOff, y-10, -zOff2);
 		placeYSupBeam(x-xOff, y-10, -zOff1);
 		placeYSupBeam(x-xOff, y-10, -zOff2);
-	};
 
-
-	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
+		/* Place Wooden Platforms */
 		placeWoodenPlatforms(x);
-	}	
+	};
 };
 
 var placeWoodenPlatforms = function(_x){
+
 	var platformGroup = new THREE.Group();
 	/* 
 		Wooden Platforms (facing North) 
@@ -395,7 +418,10 @@ var placeWoodenPlatforms = function(_x){
 	}
 	var woodPlankGeo = new THREE.BoxGeometry(wPlatConfig.width, wPlatConfig.thickness, wPlatConfig.depth/4 - 5);
 
-	/* X Planks */
+	/*
+		Base of Platform
+	*/
+	// X Planks 
 	for(var z = -wPlatConfig.depth; z < wPlatConfig.depth; z+= wPlatConfig.depth/6){
 
 		var woodPlank = new THREE.Mesh(woodPlankGeo, beamMat);
@@ -406,7 +432,7 @@ var placeWoodenPlatforms = function(_x){
 		platformGroup.add(woodPlank);
 	}
 
-	/* Z Support Beams */
+	// Z Support Beams 
 	var wBeamConfig = {
 		width : wPlatConfig.thickness*2,
 		height: wPlatConfig.thickness*4
@@ -427,7 +453,7 @@ var placeWoodenPlatforms = function(_x){
 		platformGroup.add(woodBeam);
 	}
 
-	/* Rotated X Support Beam */
+	// Rotated X Support Beam 
 	var xWoodBeamConfig = {
 		width : wPlatConfig.width + 30,
 		rotX  : 25 * Math.PI/180
@@ -443,7 +469,10 @@ var placeWoodenPlatforms = function(_x){
 
 	platformGroup.add(xWoodBeam);
 
-	/* Inclined Y Support Beam */
+	/*
+		Y Beams
+	*/
+	// Inclined Long Y Support Beam 
 	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height*2.5, wBeamConfig.width*2);
 
 	for (var i = 0; i < 2; i++) {
@@ -461,7 +490,7 @@ var placeWoodenPlatforms = function(_x){
 
 	};
 
-	/* Y Support Beam */
+	// Y Support Beam 
 	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height, wBeamConfig.width*2);
 
 	for (var i = 0; i < 2; i++) {
@@ -477,7 +506,7 @@ var placeWoodenPlatforms = function(_x){
 
 	};
 
-	/* Inclined Y Support Beam */
+	// Inclined Short Y Support Beam 
 	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height + 5, wBeamConfig.width*2);
 
 	for (var i = 0; i < 2; i++) {
@@ -495,7 +524,10 @@ var placeWoodenPlatforms = function(_x){
 
 	};
 
-	/* Top X Beam */
+	/*
+		Roof of Platform 
+	*/
+	// Top X Beam 
 	var woodBeamGeo = new THREE.BoxGeometry(wPlatConfig.width, wBeamConfig.height, wBeamConfig.height);
 	var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
 
@@ -506,7 +538,7 @@ var placeWoodenPlatforms = function(_x){
 	platformGroup.add(woodBeam);
 
 
-	/* Rotated X Roof Plank */
+	// Rotated X Roof Plank 
 	var woodBeamGeo = new THREE.BoxGeometry(wPlatConfig.width + 10, wBeamConfig.height*1.5, wBeamConfig.height/2);
 	var xWoodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
 
@@ -518,7 +550,7 @@ var placeWoodenPlatforms = function(_x){
 
 	platformGroup.add(xWoodBeam);
 
-	/* Roof Z Beams */
+	// Roof Z Beams 
 	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width, wBeamConfig.height, wPlatConfig.depth*2 + 5);
 
 	for(var x = -(wPlatConfig.width - wBeamConfig.width)/2; 
@@ -534,7 +566,7 @@ var placeWoodenPlatforms = function(_x){
 		platformGroup.add(woodBeam);
 	}
 
-	/* Roof X Planks */
+	// Roof X Planks 
 	for(var z = -wPlatConfig.depth; z < wPlatConfig.depth; z+= wPlatConfig.depth/6){
 
 		var woodPlank = new THREE.Mesh(woodPlankGeo, beamMat);
@@ -559,6 +591,7 @@ var placeWoodenPlatforms = function(_x){
 	scene.add(platformGroup);
 }
 
+var castle;
 var placeCastle = function(){
 
 	/*
@@ -582,6 +615,7 @@ var placeCastle = function(){
 	scene.add(castle);
 };
 
+var longBeam, zBeam;
 var placeElevatorBeams = function(){
 	/*
 		Elevator Beams
@@ -589,25 +623,19 @@ var placeElevatorBeams = function(){
 	
 	var longBeamGeo = new THREE.BoxGeometry(longBeamConfig.width, longBeamConfig.height, longBeamConfig.depth);
 
-	/* Long Beam Left */
-	longBeam = new THREE.Mesh(longBeamGeo, beamMat);
+	/* Long Beam Left & Right */
+	for (var i = 0; i < 2; i++) {
+		var mult = (i%2)? -1 : 1;
 
-	longBeam.position.x = -longBeamConfig.posX;
-	longBeam.position.y = longBeamConfig.posY;
-	longBeam.position.z = longBeamConfig.posZ;
+		longBeam = new THREE.Mesh(longBeamGeo, beamMat);
 
-	longBeam.rotation.x = longBeamConfig.rotX;
-	scene.add(longBeam);
+		longBeam.position.x = longBeamConfig.posX * mult;
+		longBeam.position.y = longBeamConfig.posY;
+		longBeam.position.z = longBeamConfig.posZ;
 
-	/* Long Beam Right */
-	longBeam = new THREE.Mesh(longBeamGeo, beamMat);
-
-	longBeam.position.x = longBeamConfig.posX;
-	longBeam.position.y = longBeamConfig.posY;
-	longBeam.position.z = longBeamConfig.posZ;
-
-	longBeam.rotation.x = longBeamConfig.rotX;
-	scene.add(longBeam);
+		longBeam.rotation.x = longBeamConfig.rotX;
+		scene.add(longBeam);
+	}
 
 	/* 
 		Z Beams 
@@ -626,23 +654,18 @@ var placeElevatorBeams = function(){
 		// Skewing the Z position according to Long Beam's X Rotation
 		var z = (longBeamConfig.height - y) * Math.sin(-longBeamConfig.rotX) + longBeamConfig.posZ - 200;
 
-		/* Left Z Beams */
-		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
-		zBeam.position.x = zBeamConfig.posX;
-		zBeam.position.z = z;
-		zBeam.position.y = y;
-		zBeam.rotation.y = -zBeamConfig.rotY;
+		/* Left Right Z Beams */
+		for (var i = 0; i < 2; i++) {
+			var mult = (i%2)? -1 : 1;
 
-		scene.add(zBeam);
+			zBeam = new THREE.Mesh(zBeamGeo, beamMat);
+			zBeam.position.x = zBeamConfig.posX * mult;
+			zBeam.position.z = z;
+			zBeam.position.y = y;
+			zBeam.rotation.y = -zBeamConfig.rotY * mult;
 
-		/* Right Z Beams */
-		zBeam = new THREE.Mesh(zBeamGeo, beamMat);
-		zBeam.position.x = -zBeamConfig.posX;
-		zBeam.position.z = z;
-		zBeam.position.y = y;
-		zBeam.rotation.y = zBeamConfig.rotY;
-
-		scene.add(zBeam);
+			scene.add(zBeam);
+		}
 	}
 
 	/*
@@ -669,6 +692,7 @@ var placeElevatorBeams = function(){
 	}
 };
 
+var elevator;
 var placeElevator = function(){
 
 	elevator = new THREE.Group();
@@ -1123,6 +1147,12 @@ var placeElevator = function(){
 	scene.add(elevator);
 };
 
+/**************************************
+	
+			ANIMATIONS
+
+***************************************/
+var reachedTop = false, reachedBot = true;
 var runElevator = function(){
 	// Going Up
 	if(!reachedTop){
@@ -1159,6 +1189,23 @@ var animate = function(t){
 	controls.update();
 	window.requestAnimationFrame(animate, renderer.domElement);
 };
+
+/**************************************
+	
+			MISC FUNCTIONS
+
+***************************************/
+var onWindowResize = function(){
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+};
+
+var computeNormals = function(obj){
+	obj.computeVertexNormals();
+	obj.computeFaceNormals();
+}
 
 
 init();
