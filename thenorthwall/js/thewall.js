@@ -77,7 +77,8 @@ var beamMat = new THREE.MeshLambertMaterial({
 /* Grill Material */
 var grillMat = new THREE.MeshLambertMaterial({
 	color   : 0x323839,
-	shading : THREE.FlatShading
+	shading : THREE.FlatShading,
+	side: THREE.DoubleSide
 });
 
 /* Wall Material */
@@ -341,7 +342,7 @@ var placeTopWall = function(){
 	}
 
 	/* X Support Beam */
-	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 10, 10 );
+	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 5, 5 );
 
 	var y = wallConfig.height + wallBlockConfig.height - 25;
 	var z = 50;
@@ -357,7 +358,7 @@ var placeTopWall = function(){
 	}
 
 	/* Z, Y Beams & Wooden Platform */
-	var zSupBeamGeo = new THREE.BoxGeometry( 10, 10, wallConfig.depth );
+	var zSupBeamGeo = new THREE.BoxGeometry( 5, 5, wallConfig.depth );
 	var ySupBeamGeo = new THREE.BoxGeometry( 10, 40, 10 );
 
 	var placeYSupBeam = function(x, y, z){
@@ -371,6 +372,10 @@ var placeTopWall = function(){
 	var xOff = 45;
 	var zOff1 = 120;
 	var zOff2 = 170;
+
+	var arr = [-6480, -5265, -4860, -4455, -3240, -2835, -2430, -1620, -405, 0, 405, 810, 1620, 2430, 2835, 3240, 3645, 4455, 4860, 5670, 6075, 6480, 7695];
+	var start = 0;
+	var	end = arr.length-1;
 
 	for (var x = -(wallConfig.width/2 - wallBlockConfig.width - 50); x < wallConfig.width/2; x += wallBlockConfig.width+100) {
 		/* Z Support Beam */
@@ -400,8 +405,11 @@ var placeTopWall = function(){
 		placeYSupBeam(x-xOff, y-10, -zOff2);
 
 		/* Place Wooden Platforms */
-		placeWoodenPlatforms(x);
+		if(binSearch(arr, x, start, end)){
+			placeWoodenPlatforms(x);	
+		}
 	};
+	//console.log(arr);
 };
 
 var placeWoodenPlatforms = function(_x){
@@ -589,6 +597,78 @@ var placeWoodenPlatforms = function(_x){
 	platformGroup.scale.z = 0.5;
 
 	scene.add(platformGroup);
+}
+
+var placeTorchHolders = function(){
+
+	var torch = new THREE.Object3D();
+
+	var extrudeSettings = { amount: 0.5, bevelEnabled: false, steps: 2 };
+
+	// Torch Rings
+	for(var i = 0; i < 3; i++){
+
+		
+		var ringShape = new THREE.Shape();
+		ringShape.absarc( 10, 10, 2, 0, Math.PI*2, true );
+
+		var holePath = new THREE.Path();
+		holePath.absarc( 10, 10, 1.9, 0, Math.PI*2, true );
+		ringShape.holes.push( holePath );
+
+		var ringGeo = new THREE.ExtrudeGeometry( ringShape, extrudeSettings );
+
+		var ring = new THREE.Mesh( ringGeo, grillMat );
+		ring.rotation.x = 90 * Math.PI/180;
+
+		ring.position.set(-10, i * 1.1, -10);
+		torch.add(ring);
+	}
+
+	// Torch side supports
+	var num = 5;
+	for(var i = 0; i < num; i++){
+		var supGroup = new THREE.Object3D();
+		
+		var supGeo = new THREE.BoxGeometry(0.5, 5, 0.1);
+
+		var sup = new THREE.Mesh(supGeo, grillMat);
+		sup.position.z = 2;
+		sup.position.y += 0.3;
+
+		supGroup.add(sup);
+
+		supGroup.rotation.y = i/num * 360 * Math.PI/180;
+		torch.add(supGroup);
+	}
+
+	// Torch Bowl
+	var segments = 16;
+	var phiStart = 10;
+	var phiLength = 2 * Math.PI;
+	    
+    var points = [];
+    var count = 1.8;
+    for (var i = 0; i < count; i+=0.2) {
+        points.push(new THREE.Vector3((Math.cos(i * 1.1) + 1), 0, ( i - count ) + count));
+    }
+
+    // use the same points to create a convexgeometry
+    var latheGeometry = new THREE.LatheGeometry(points, segments, phiStart, phiLength);
+    var latheMesh = new THREE.Mesh(latheGeometry, grillMat);
+    latheMesh.rotation.x = 90 * Math.PI/180;
+    latheMesh.position.y -= 1;
+
+    torch.add(latheMesh);
+
+    // Torch Handle
+    var handleGeo = new THREE.CylinderGeometry(0.7, 0.6, 7, 16);
+    var handle = new THREE.Mesh(handleGeo, grillMat);
+
+    handle.position.y -= 6;
+    torch.add(handle);
+
+	scene.add(torch);
 }
 
 var castle;
@@ -1207,8 +1287,31 @@ var computeNormals = function(obj){
 	obj.computeFaceNormals();
 }
 
+var binSearch = function(arr, val, start, end){
+
+	var mid = Math.round((start+end)/2);
+
+	if(start > end){
+		return false;
+	}
+	else{
+		
+		if(val == arr[mid]){
+			return true;
+		}
+		else if(val > arr[mid]){
+			return binSearch(arr, val, mid+1, end);
+		}
+		else if(val < arr[mid]){
+			return binSearch(arr, val, start, mid-1);
+		}
+	}
+	
+}
+
 
 init();
+
 placeLight();
 placeWall();
 placeTopWall();
