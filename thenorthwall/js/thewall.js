@@ -15,8 +15,8 @@
 ***************************************/
 var camConfig = {
 	posX : 0,
-	posY : 300,
-	posZ : 1000
+	posY : 1000,
+	posZ : 3000
 }
 
 var groundConfig = {
@@ -113,7 +113,7 @@ var init = function(){
 	// RENDERER
 	renderer = new THREE.WebGLRenderer({
 		alpha: true,
-		antialias: true,
+		antialias: true
 	});
 	renderer.setSize(WIDTH, HEIGHT);
 	renderer.setClearColor(0x000000, 0.5); //CDCDCD
@@ -342,7 +342,7 @@ var placeTopWall = function(){
 	}
 
 	/* X Support Beam */
-	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 5, 5 );
+	var xSupBeamGeo = new THREE.BoxGeometry( wallConfig.width, 2.5, 2.5 );
 
 	var y = wallConfig.height + wallBlockConfig.height - 25;
 	var z = 50;
@@ -351,15 +351,15 @@ var placeTopWall = function(){
 		var mult = (i%2)? -1 : 1;
 
 		var xSupBeam = new THREE.Mesh(xSupBeamGeo, beamMat);
-		xSupBeam.position.y = y;
+		xSupBeam.position.y = y - 1;
 		xSupBeam.position.z = z*mult;
 
 		scene.add(xSupBeam);
 	}
 
 	/* Z, Y Beams & Wooden Platform */
-	var zSupBeamGeo = new THREE.BoxGeometry( 5, 5, wallConfig.depth );
-	var ySupBeamGeo = new THREE.BoxGeometry( 10, 40, 10 );
+	var zSupBeamGeo = new THREE.BoxGeometry( 2.5, 2.5, wallConfig.depth );
+	var ySupBeamGeo = new THREE.BoxGeometry( 5, 40, 5 );
 
 	var placeYSupBeam = function(x, y, z){
 		var ySupBeam = new THREE.Mesh(ySupBeamGeo, beamMat);
@@ -369,7 +369,7 @@ var placeTopWall = function(){
 		scene.add(ySupBeam);
 	};
 
-	var xOff = 45;
+	var xOff = 40;
 	var zOff1 = 120;
 	var zOff2 = 170;
 
@@ -383,26 +383,52 @@ var placeTopWall = function(){
 			var mult = (i%2)? -1 : 1;
 
 			var zSupBeam = new THREE.Mesh(zSupBeamGeo, beamMat);
-			zSupBeam.position.y = y - 5;
+			zSupBeam.position.y = y;
 			zSupBeam.position.x = x + 40*mult;
 			scene.add(zSupBeam);	
 		}
 
-		/* Y Support Beam */
+		/* Y Support Beam 
+			
+			X(4)       X(2)
+
+
+			X(3)       X(1) 
+
+		*/
+
+		// Along the X Axis
+		// X(1)
 		placeYSupBeam(x+50, y-10,  48);
+		// X(2)
 		placeYSupBeam(x+50, y-10, -48);
+		// X(3)
 		placeYSupBeam(x-50, y-10,  48);
+		// X(4)
 		placeYSupBeam(x-50, y-10, -48);
+
+		scene.add(placeTorchHolders(x+50, y-10,  43.5, 180));
+		scene.add(placeTorchHolders(x+50, y-10, -43.5, 0));
+		scene.add(placeTorchHolders(x-50, y-10,  43.5, 180));
+		scene.add(placeTorchHolders(x-50, y-10, -43.5, 0));
 		
+		// Along the Z Axis (Top)
 		placeYSupBeam(x+xOff, y-10, zOff1);
 		placeYSupBeam(x+xOff, y-10, zOff2);
 		placeYSupBeam(x-xOff, y-10, zOff1);
 		placeYSupBeam(x-xOff, y-10, zOff2);
 
+		scene.add(placeTorchHolders(x+xOff-4.5, y-10, zOff1, -90));
+		scene.add(placeTorchHolders(x-xOff+4.5, y-10, zOff1, 90));
+
+		// Along the Z Axis (Bot)
 		placeYSupBeam(x+xOff, y-10, -zOff1);
 		placeYSupBeam(x+xOff, y-10, -zOff2);
 		placeYSupBeam(x-xOff, y-10, -zOff1);
 		placeYSupBeam(x-xOff, y-10, -zOff2);
+
+		scene.add(placeTorchHolders(x+xOff-4.5, y-10, -zOff1, -90));
+		scene.add(placeTorchHolders(x-xOff+4.5, y-10, -zOff1, 90));
 
 		/* Place Wooden Platforms */
 		if(binSearch(arr, x, start, end)){
@@ -464,7 +490,7 @@ var placeWoodenPlatforms = function(_x){
 	// Rotated X Support Beam 
 	var xWoodBeamConfig = {
 		width : wPlatConfig.width + 30,
-		rotX  : 25 * Math.PI/180
+		rotX  : deg2rad(25)
 	}
 	var woodBeamGeo = new THREE.BoxGeometry(xWoodBeamConfig.width, wBeamConfig.height, wBeamConfig.height/2);
 	var xWoodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
@@ -502,7 +528,7 @@ var placeWoodenPlatforms = function(_x){
 	var woodBeamGeo = new THREE.BoxGeometry(wBeamConfig.width*2, wPlatConfig.height, wBeamConfig.width*2);
 
 	for (var i = 0; i < 2; i++) {
-		var mult = (i%2)? -1 : 1;
+		var mult = (i%2)? 1 : -1;
 
 		var woodBeam = new THREE.Mesh(woodBeamGeo, beamMat);
 
@@ -512,6 +538,14 @@ var placeWoodenPlatforms = function(_x){
 
 		platformGroup.add(woodBeam);
 
+		platformGroup.add(
+			placeTorchHolders(
+				woodBeam.position.x - 6*mult, 
+				woodBeam.position.y + 15, 
+				woodBeam.position.z, 
+				90*-mult
+			)
+		);
 	};
 
 	// Inclined Short Y Support Beam 
@@ -526,7 +560,7 @@ var placeWoodenPlatforms = function(_x){
 		woodBeam.position.y = xWoodBeam.position.y + wPlatConfig.height/5;
 		woodBeam.position.z = wPlatConfig.depth/4;
 
-		woodBeam.rotation.x = -(xWoodBeamConfig.rotX + 15 * Math.PI/180);
+		woodBeam.rotation.x = -(xWoodBeamConfig.rotX + deg2rad(15));
 
 		platformGroup.add(woodBeam);
 
@@ -554,7 +588,7 @@ var placeWoodenPlatforms = function(_x){
 	xWoodBeam.position.y = wPlatConfig.height - wBeamConfig.height/2 - 15 - wBeamConfig.height/2;
 	xWoodBeam.position.z = wPlatConfig.depth*1.5;
 
-	xWoodBeam.rotation.x = xWoodBeamConfig.rotX - 10 * Math.PI/180;
+	xWoodBeam.rotation.x = xWoodBeamConfig.rotX - deg2rad(10);
 
 	platformGroup.add(xWoodBeam);
 
@@ -585,21 +619,20 @@ var placeWoodenPlatforms = function(_x){
 		platformGroup.add(woodPlank);
 	}
 
-
 	platformGroup.position.x = _x;
 	platformGroup.position.y += wallConfig.height + 5;
 	platformGroup.position.z -= wallConfig.depth/2 + wPlatConfig.depth/2;
 
-	platformGroup.rotation.y = 180 * Math.PI/180;
+	platformGroup.rotation.y = deg2rad(180);
 
-	platformGroup.scale.x = 0.5;
-	platformGroup.scale.y = 0.5;
-	platformGroup.scale.z = 0.5;
+	platformGroup.scale.x = 0.6;
+	platformGroup.scale.y = 0.6;
+	platformGroup.scale.z = 0.6;
 
 	scene.add(platformGroup);
 }
 
-var placeTorchHolders = function(){
+var placeTorchHolders = function(_x, _y, _z, _ry){
 
 	var torch = new THREE.Object3D();
 
@@ -619,7 +652,7 @@ var placeTorchHolders = function(){
 		var ringGeo = new THREE.ExtrudeGeometry( ringShape, extrudeSettings );
 
 		var ring = new THREE.Mesh( ringGeo, grillMat );
-		ring.rotation.x = 90 * Math.PI/180;
+		ring.rotation.x = deg2rad(90);
 
 		ring.position.set(-10, i * 1.1, -10);
 		torch.add(ring);
@@ -630,15 +663,15 @@ var placeTorchHolders = function(){
 	for(var i = 0; i < num; i++){
 		var supGroup = new THREE.Object3D();
 		
-		var supGeo = new THREE.BoxGeometry(0.5, 5, 0.1);
+		var supGeo = new THREE.BoxGeometry(0.5, 3.5, 0.1);
 
 		var sup = new THREE.Mesh(supGeo, grillMat);
 		sup.position.z = 2;
-		sup.position.y += 0.3;
+		sup.position.y += 0.5;
 
 		supGroup.add(sup);
 
-		supGroup.rotation.y = i/num * 360 * Math.PI/180;
+		supGroup.rotation.y = deg2rad(i/num * 360);
 		torch.add(supGroup);
 	}
 
@@ -653,10 +686,9 @@ var placeTorchHolders = function(){
         points.push(new THREE.Vector3((Math.cos(i * 1.1) + 1), 0, ( i - count ) + count));
     }
 
-    // use the same points to create a convexgeometry
     var latheGeometry = new THREE.LatheGeometry(points, segments, phiStart, phiLength);
     var latheMesh = new THREE.Mesh(latheGeometry, grillMat);
-    latheMesh.rotation.x = 90 * Math.PI/180;
+    latheMesh.rotation.x = deg2rad(90);
     latheMesh.position.y -= 1;
 
     torch.add(latheMesh);
@@ -668,7 +700,50 @@ var placeTorchHolders = function(){
     handle.position.y -= 6;
     torch.add(handle);
 
-	scene.add(torch);
+    torch.rotation.z = deg2rad(-20);
+
+    /*
+    	Torch Holder Brackets
+    */
+    var torchHolder = new THREE.Object3D();
+
+    // Top Hortizontal
+    var holderGeo = new THREE.BoxGeometry(4, 0.2, 3);
+    var holder = new THREE.Mesh(holderGeo, grillMat);
+    holder.position.y -= 4;
+    holder.position.x -= 2;
+    torchHolder.add(holder); 
+
+    // Bot Horizontal
+    holder = new THREE.Mesh(holderGeo, grillMat);
+    holder.position.y -= 7;
+    holder.position.x -= 2;
+    torchHolder.add(holder);
+
+    // Vertical
+    holder = new THREE.Mesh(holderGeo, grillMat);
+
+    holder.rotation.z = deg2rad(90);
+    holder.position.y -= 5 + 0.1;
+    holder.position.x -= 4;
+    torchHolder.add(holder);
+
+    torchHolder.add(torch)
+
+    _x = _x || 0;
+    _y = _y || 0;
+    _z = _z || 0;
+    _ry = _ry || 0;
+
+    torchHolder.position.set(_x, _y, _z);
+    torchHolder.rotation.y = deg2rad(-90);
+
+    torchHolder.rotation.y += deg2rad(_ry);
+
+    var scale = 0.5;
+    torchHolder.scale.set(scale,scale,scale);
+
+	return torchHolder;
 }
 
 var castle;
@@ -725,7 +800,7 @@ var placeElevatorBeams = function(){
 		height	: 13,
 		depth	: 250,
 		posX	: longBeamConfig.posX + 15,
-		rotY	: 6 * Math.PI/180
+		rotY	: deg2rad(6)
 	};
 	var zBeamGeo = new THREE.BoxGeometry(zBeamConfig.width, zBeamConfig.height, zBeamConfig.depth);
 	
@@ -988,7 +1063,7 @@ var placeElevator = function(){
 	*/
 	var metalBeamConfig = {
 		radius	: elevatorConfig.thickness/2 * 1.50,
-		rotZ	: 90 * Math.PI/180
+		rotZ	: deg2rad(90)
 	}
 
 	var metalBeamGeo = new THREE.CylinderGeometry(
@@ -1011,7 +1086,7 @@ var placeElevator = function(){
 	*/
 	var eleRoofBeamConfig = {
 		posX	: yBeamConfig.posX,
-		rotX	: 15 * Math.PI/180
+		rotX	: deg2rad(15)
 	}
 
 	var eleRoofBeamGeo = new THREE.BoxGeometry(elevatorConfig.thickness, elevatorConfig.thickness, elevatorConfig.depth/2 + 1.5);
@@ -1084,7 +1159,7 @@ var placeElevator = function(){
 		for (var y = -h/2; y <= h/2 ; y += h/hSeg) {
 			var grill = new THREE.Mesh(grillGeo, grillMat);
 
-			grill.rotation.z = 90 * Math.PI/180;
+			grill.rotation.z = deg2rad(90);
 
 			grill.position.x = 0;
 			grill.position.y = y + 0;
@@ -1096,7 +1171,7 @@ var placeElevator = function(){
 		grillGroup.position.x += xOff;
 		grillGroup.position.y += yOff;
 		grillGroup.position.z += zOff;
-		grillGroup.rotateY(rotY * Math.PI/180);
+		grillGroup.rotateY(deg2rad(rotY));
 
 		return grillGroup;
 	}
@@ -1280,7 +1355,7 @@ var onWindowResize = function(){
 	camera.updateProjectionMatrix();
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
-};
+}
 
 var computeNormals = function(obj){
 	obj.computeVertexNormals();
@@ -1305,8 +1380,11 @@ var binSearch = function(arr, val, start, end){
 		else if(val < arr[mid]){
 			return binSearch(arr, val, start, mid-1);
 		}
-	}
-	
+	}	
+}
+
+var deg2rad = function(angle){
+	return angle * Math.PI/180;
 }
 
 
