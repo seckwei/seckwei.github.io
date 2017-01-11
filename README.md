@@ -1,9 +1,2 @@
-seckwei.github.io
-=================
-
-<h3>This is my personal repo for all kinds of poking-fun around, mainly with HTML, CSS3, JS, jQuery and THREE.js ;)</h3>
-Currently available and/or working on:
-
-1. <a href="https://github.com/seckwei/seckwei.github.io/tree/master/algorithm">KMP String Searching Algo Next Table calculator</a>
-2. <a href="https://github.com/seckwei/seckwei.github.io/tree/master/css-fun">CSS-Fun</a>
-3. <a href="https://github.com/seckwei/seckwei.github.io/tree/master/thenorthwall">The North Wall (Game of Thrones)</a>
+## My basic portfolio site
+## [seckwei.github.io](http://seckwei.github.io)
